@@ -1,6 +1,9 @@
 import { Text, View } from "react-native";
 
 export default function Index() {
+  const x = "this will fail prettier";
+  console.log(x);
+
   return (
     <View
       style={{
