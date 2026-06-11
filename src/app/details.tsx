@@ -1,9 +1,6 @@
 import { Text, View } from 'react-native';
 
-export default function Index() {
-  const x = 'this will fail prettierssss';
-  console.log(x);
-
+export default function DetailsScreen() {
   return (
     <View
       style={{
@@ -12,7 +9,7 @@ export default function Index() {
         alignItems: 'center',
       }}
     >
-      <Text>Hello World</Text>
+      <Text>Hi</Text>
     </View>
   );
 }
