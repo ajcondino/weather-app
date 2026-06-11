@@ -1,15 +1,15 @@
-import { Text, View } from "react-native";
+import { Text, View } from 'react-native';
 
 export default function Index() {
-  const x = "this will fail prettier";
+  const x = 'this will fail prettierssss';
   console.log(x);
 
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <Text>Hello World</Text>
