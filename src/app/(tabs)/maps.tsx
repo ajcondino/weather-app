@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-export default function DetailsScreen() {
+export default function Maps() {
   return (
     <View
       style={{
@@ -9,7 +9,7 @@ export default function DetailsScreen() {
         alignItems: 'center',
       }}
     >
-      <Text>Hi</Text>
+      <Text>Maps</Text>
     </View>
   );
 }
