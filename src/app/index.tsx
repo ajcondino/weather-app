@@ -2,8 +2,9 @@ import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native
 
 import { useLocation } from '#/hooks/useLocation';
 import { useCurrentWeather } from '#/hooks/useWeather';
+import { Link } from 'expo-router';
 
-export default function Index() {
+export default function HomeScreen() {
   const { location, status } = useLocation();
   const {
     data: weather,
@@ -39,6 +40,9 @@ export default function Index() {
     >
       <Text>{weather?.location.name}</Text>
       <Text>{weather?.temperatureC}°</Text>
+      <Text>
+        <Link href="/location">Settings</Link>
+      </Text>
     </ScrollView>
   );
 }
