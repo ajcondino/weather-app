@@ -1,11 +1,12 @@
 import { searchLocations } from '#/api/geocoding';
 import { Location } from '#/api/types';
+import { LocationFooter } from '#/components/LocationFooter';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 import { BlurView } from 'expo-blur';
-import { Link, useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function LocationScreen() {
   const headerHeight = useHeaderHeight();
@@ -36,20 +37,18 @@ export default function LocationScreen() {
   }
 
   return (
-    <>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text>
-          Viewing details for location: {query}
-          <Link href="/weather/1">View Location Details</Link>
-        </Text>
+    <View style={styles.root}>
+      <ScrollView
+        style={styles.fill}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: headerHeight }]}
+      >
+        <Text style={styles.paragraph}>Learn more about weather data and map data</Text>
       </ScrollView>
 
+      <LocationFooter />
+
       {isSearching && (
-        <BlurView
-          tint="systemMaterial"
-          intensity={10}
-          style={[StyleSheet.absoluteFill, { top: headerHeight }]}
-        >
+        <BlurView style={[StyleSheet.absoluteFill, { top: headerHeight + 12 }]}>
           <FlatList
             data={searchResults}
             keyExtractor={(item) => item.name + item.lat + item.lon}
@@ -59,7 +58,7 @@ export default function LocationScreen() {
                 activeOpacity={0.6}
                 onPress={() => onSelectSearchResult(item)}
               >
-                <Text>
+                <Text style={styles.resultText}>
                   {item.name}, {item.state ? item.state + ', ' : ''}
                   {item.country}
                 </Text>
@@ -68,26 +67,36 @@ export default function LocationScreen() {
           />
         </BlurView>
       )}
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    backgroundColor: '#000',
+  },
+  fill: {
+    flex: 1,
   },
   paragraph: {
-    fontSize: 18,
+    color: 'rgba(255,255,255,0.60)',
     textAlign: 'center',
+    marginTop: 15,
+    fontSize: 11,
+  },
+  scrollContent: {
+    padding: 20,
   },
   row: {
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
-  title: {
-    fontSize: 17,
+  resultText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  resultSecondary: {
+    color: 'rgba(255,255,255,0.60)',
   },
 });

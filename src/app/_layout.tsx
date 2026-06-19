@@ -21,7 +21,7 @@ export default function RootLayout() {
             headerTitle: 'Weather',
             headerLargeTitle: true,
             headerSearchBarOptions: {
-              placeholder: 'Search for a city',
+              placeholder: 'Search for a city or airport',
               hideWhenScrolling: false,
               onChangeText: (event) => {
                 router.setParams({ query: event.nativeEvent.text });

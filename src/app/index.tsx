@@ -1,49 +1,30 @@
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
+import { LocationFooter } from '#/components/LocationFooter';
+import { SkyBackground } from '#/components/SkyBackground';
+import WeatherHeader from '#/components/WeatherHeader';
 import { useLocation } from '#/hooks/useLocation';
 import { useCurrentWeather } from '#/hooks/useWeather';
-import { Link } from 'expo-router';
 
 export default function HomeScreen() {
-  const { location, status } = useLocation();
+  const { location } = useLocation();
   const {
     data: weather,
-    isLoading,
-    isError,
     refetch,
     isRefetching,
   } = useCurrentWeather(location ? { lat: location.lat, lon: location.lon } : null, location);
 
-  if (status === 'requesting' || isLoading) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.paragraph}>Loading...</Text>
-      </View>
-    );
-  }
-
-  if (status === 'denied' || isError) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.paragraph}>Location access denied or failed to fetch weather.</Text>
-        <Text style={styles.paragraph} onPress={() => refetch()} disabled={isRefetching}>
-          Tap to retry
-        </Text>
-      </View>
-    );
-  }
-
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
-    >
-      <Text>{weather?.location.name}</Text>
-      <Text>{weather?.temperatureC}°</Text>
-      <Text>
-        <Link href="/location">Settings</Link>
-      </Text>
-    </ScrollView>
+    <>
+      <SkyBackground condition={weather?.condition} isDay={weather?.isDay} />
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
+      >
+        <WeatherHeader weather={weather} />
+      </ScrollView>
+      <LocationFooter />
+    </>
   );
 }
 
@@ -53,9 +34,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-  },
-  paragraph: {
-    fontSize: 18,
-    textAlign: 'center',
   },
 });

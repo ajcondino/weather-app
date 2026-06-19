@@ -1,7 +1,9 @@
 import { Coordinates, Location } from '#/api/types';
+import { SkyBackground } from '#/components/SkyBackground';
+import WeatherHeader from '#/components/WeatherHeader';
 import { useCurrentWeather } from '#/hooks/useWeather';
-import { Link, useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { ScrollView, StyleSheet } from 'react-native';
 
 export default function WeatherPreviewModal() {
   const { lat, lon, name, country, countryCode } = useLocalSearchParams<{
@@ -24,13 +26,10 @@ export default function WeatherPreviewModal() {
   const { data: weather } = useCurrentWeather(coords, location);
 
   return (
-    <View style={styles.container}>
-      <Text>{weather?.location.name}</Text>
-      <Text>{weather?.temperatureC}°</Text>
-      <Text>
-        <Link href="/location">Settings</Link>
-      </Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <SkyBackground condition={weather?.condition} isDay={weather?.isDay} />
+      <WeatherHeader weather={weather} />
+    </ScrollView>
   );
 }
 
@@ -40,9 +39,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-  },
-  paragraph: {
-    fontSize: 18,
-    textAlign: 'center',
   },
 });
