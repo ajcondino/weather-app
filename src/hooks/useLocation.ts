@@ -57,10 +57,10 @@ export function useLocation(): UseLocationResult {
 
       if (!cancelled) {
         setLocation({
-          name: place.city ?? place.subregion ?? place.region ?? 'Current Location',
-          country: place.country ?? '',
-          countryCode: place.isoCountryCode ?? '',
-          state: place.region ?? undefined,
+          name: place?.city ?? place?.subregion ?? place?.region ?? 'Current Location',
+          country: place?.country ?? '',
+          countryCode: place?.isoCountryCode ?? '',
+          state: place?.region ?? undefined,
           lat: coords.latitude,
           lon: coords.longitude,
         });
