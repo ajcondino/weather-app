@@ -18,8 +18,11 @@ export default function WeatherHeader({ weather }: WeatherHeaderProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.location}>{weather.location.name}</Text>
-      <Text style={styles.temperature}>{Math.ceil(weather.temperatureC)}°</Text>
+      <Text style={styles.temperature}>{Math.round(weather.temperatureC)}°</Text>
       <Text style={styles.condition}>{WEATHER_DESCRIPTIONS[weather.condition]}</Text>
+      <Text style={styles.highLow}>
+        H: {weather.daily[0].maxTempC}° L: {weather.daily[0].minTempC}°
+      </Text>
     </View>
   );
 }
@@ -32,22 +35,27 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 34,
-    fontWeight: '300',
-    color: '#fff',
+    fontWeight: '400',
     letterSpacing: 0.4,
     marginBottom: 2,
+    color: 'rgba(255,255,255,0.75)',
   },
   temperature: {
     fontSize: 96,
-    fontWeight: '100',
-    color: '#fff',
+    fontWeight: '200',
     letterSpacing: -4,
     lineHeight: 108,
+    color: 'rgba(255,255,255,0.75)',
   },
   condition: {
     fontSize: 20,
-    fontWeight: '400',
-    color: 'rgba(255,255,255,0.85)',
+    fontWeight: '500',
+    color: '#fff',
     marginBottom: 4,
+  },
+  highLow: {
+    fontSize: 20,
+    fontWeight: '500',
+    color: 'rgba(255,255,255,0.75)',
   },
 });
