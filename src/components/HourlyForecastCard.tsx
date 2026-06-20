@@ -1,0 +1,80 @@
+import { HourlyForecast } from '#/api/types';
+import { getWeatherIcon } from '#/themes/weatherIcons';
+import { BlurView } from 'expo-blur';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { CardHeader } from './CardHeader';
+
+interface HourlyForecastCardProps {
+  hours: HourlyForecast[];
+}
+
+export function HourlyForecastCard({ hours }: HourlyForecastCardProps) {
+  if (hours.length === 0) return null;
+
+  return (
+    <BlurView intensity={30} tint="dark" style={styles.card}>
+      <CardHeader title="Hourly Forecast" style={styles.header} />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {hours.map((hour, i) => (
+          <HourCell key={hour.time} hour={hour} isNow={i === 0} />
+        ))}
+      </ScrollView>
+    </BlurView>
+  );
+}
+
+function HourCell({ hour, isNow }: { hour: HourlyForecast; isNow: boolean }) {
+  const Icon = getWeatherIcon(hour.condition, hour.isDay);
+  const label = isNow ? 'Now' : formatHour(hour.time);
+
+  return (
+    <View style={styles.cell}>
+      <Text style={styles.hourLabel}>{label}</Text>
+      <Icon color="#fff" size={28} />
+      <Text style={styles.temp}>{Math.round(hour.temperatureC)}°</Text>
+    </View>
+  );
+}
+
+function formatHour(isoTime: string): string {
+  const date = new Date(isoTime);
+  return date.toLocaleTimeString(undefined, { hour: 'numeric' });
+}
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    paddingVertical: 14,
+  },
+  header: {
+    marginHorizontal: 20,
+    marginBottom: 10,
+  },
+  scrollContent: {
+    paddingHorizontal: 16,
+    gap: 25,
+  },
+  cell: {
+    alignItems: 'center',
+    minWidth: 36,
+    gap: 12,
+  },
+  hourLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  icon: {
+    marginVertical: 8,
+  },
+  temp: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#fff',
+  },
+});
