@@ -1,5 +1,6 @@
-import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
+import { HourlyForecastCard } from '#/components/HourlyForecastCard';
 import { LocationFooter } from '#/components/LocationFooter';
 import { SkyBackground } from '#/components/SkyBackground';
 import WeatherHeader from '#/components/WeatherHeader';
@@ -15,24 +16,37 @@ export default function HomeScreen() {
   } = useCurrentWeather(location ? { lat: location.lat, lon: location.lon } : null, location);
 
   return (
-    <>
+    <View style={styles.root}>
       <SkyBackground condition={weather?.condition} isDay={weather?.isDay} />
       <ScrollView
-        contentContainerStyle={styles.container}
+        contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
       >
         <WeatherHeader weather={weather} />
+
+        {weather && (
+          <>
+            {weather.hourly.length > 0 && (
+              <View style={styles.hourlyWrapper}>
+                <HourlyForecastCard hours={weather?.hourly} />
+              </View>
+            )}
+          </>
+        )}
       </ScrollView>
       <LocationFooter />
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  scrollContent: {
     padding: 20,
+  },
+  hourlyWrapper: {
+    marginTop: 10,
   },
 });
