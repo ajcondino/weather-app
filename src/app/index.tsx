@@ -1,5 +1,6 @@
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
+import { DailyForecastCard } from '#/components/DailyForecastCard';
 import { HourlyForecastCard } from '#/components/HourlyForecastCard';
 import { LocationFooter } from '#/components/LocationFooter';
 import { SkyBackground } from '#/components/SkyBackground';
@@ -31,6 +32,12 @@ export default function HomeScreen() {
                 <HourlyForecastCard hours={weather?.hourly} />
               </View>
             )}
+
+            {weather.daily.length > 0 && (
+              <View style={styles.dailyWrapper}>
+                <DailyForecastCard days={weather?.daily} />
+              </View>
+            )}
           </>
         )}
       </ScrollView>
@@ -47,6 +54,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   hourlyWrapper: {
+    marginTop: 10,
+  },
+  dailyWrapper: {
     marginTop: 10,
   },
 });
