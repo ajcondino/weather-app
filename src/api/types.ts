@@ -52,5 +52,7 @@ export interface DailyForecast {
   maxTempC: number;
   minTempC: number;
   precipitationMm: number;
+  /** Max chance of rain for the day */
+  precipitationProbabilityMax: number;
   uvIndex: number;
 }

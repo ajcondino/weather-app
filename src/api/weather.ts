@@ -60,6 +60,7 @@ interface OpenMeteoResponse {
     temperature_2m_max: number[];
     temperature_2m_min: number[];
     precipitation_sum: number[];
+    precipitation_probability_max: number[];
     uv_index_max: number[];
   };
 }
@@ -92,15 +93,17 @@ export async function getCurrentWeather(
       hourly: ['temperature_2m', 'weather_code', 'precipitation', 'is_day'].join(','),
       forecast_hours: 24,
 
-      // Daily - 8 days
+      // Daily - 10 days
+      // Actually, as per Eric's AC it should be 8-days but I'm cloning ios weather app, that's why :)
       daily: [
         'weather_code',
         'temperature_2m_max',
         'temperature_2m_min',
         'precipitation_sum',
+        'precipitation_probability_max',
         'uv_index_max',
       ].join(','),
-      forecast_days: 8,
+      forecast_days: 10,
 
       wind_speed_unit: 'kmh',
     },
@@ -135,6 +138,7 @@ export async function getCurrentWeather(
     maxTempC: d.temperature_2m_max[i],
     minTempC: d.temperature_2m_min[i],
     precipitationMm: d.precipitation_sum[i],
+    precipitationProbabilityMax: d.precipitation_probability_max[i],
     uvIndex: d.uv_index_max[i],
   }));
 
