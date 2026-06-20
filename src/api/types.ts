@@ -30,4 +30,27 @@ export interface CurrentWeather {
   uvIndex: number;
   isDay: boolean;
   observedAt: string;
+
+  /** Next 24 hours, on one entry per hour. */
+  hourly: HourlyForecast[];
+
+  /** 8-day daily forecast. days[0] is today - use for H/L */
+  daily: DailyForecast[];
+}
+
+export interface HourlyForecast {
+  time: string;
+  condition: WeatherCondition;
+  temperatureC: number;
+  precipitationMm: number;
+  isDay: boolean;
+}
+
+export interface DailyForecast {
+  date: string;
+  condition: WeatherCondition;
+  maxTempC: number;
+  minTempC: number;
+  precipitationMm: number;
+  uvIndex: number;
 }

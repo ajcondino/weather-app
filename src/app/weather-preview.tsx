@@ -1,9 +1,10 @@
 import { Coordinates, Location } from '#/api/types';
+import { HourlyForecastCard } from '#/components/HourlyForecastCard';
 import { SkyBackground } from '#/components/SkyBackground';
 import WeatherHeader from '#/components/WeatherHeader';
 import { useCurrentWeather } from '#/hooks/useWeather';
 import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function WeatherPreviewModal() {
   const { lat, lon, name, country, countryCode } = useLocalSearchParams<{
@@ -26,18 +27,32 @@ export default function WeatherPreviewModal() {
   const { data: weather } = useCurrentWeather(coords, location);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.root}>
       <SkyBackground condition={weather?.condition} isDay={weather?.isDay} />
-      <WeatherHeader weather={weather} />
-    </ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <WeatherHeader weather={weather} />
+        {weather && (
+          <>
+            {weather.hourly.length > 0 && (
+              <View style={styles.hourlyWrapper}>
+                <HourlyForecastCard hours={weather?.hourly} />
+              </View>
+            )}
+          </>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  scrollContent: {
     padding: 20,
+  },
+  hourlyWrapper: {
+    marginTop: 10,
   },
 });
