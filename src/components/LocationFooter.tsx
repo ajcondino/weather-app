@@ -15,10 +15,10 @@ export function LocationFooter() {
       style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}
     >
       <Pressable onPress={() => router.push('/')}>
-        <MapIcon color="#fff" />
+        <MapIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
       <Pressable onPress={() => router.push('/location')}>
-        <ListIcon color="#fff" />
+        <ListIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
     </BlurView>
   );
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 12,
+    paddingTop: 10,
     paddingHorizontal: 28,
   },
 });
