@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { ListIcon, MapIcon } from 'lucide-react-native';
 import { Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PageDots } from './PageDots';
 
 export function LocationFooter() {
   const router = useRouter();
@@ -17,6 +18,9 @@ export function LocationFooter() {
       <Pressable onPress={() => router.push('/')}>
         <MapIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
+
+      <PageDots count={3} activeIndex={2} />
+
       <Pressable onPress={() => router.push('/location')}>
         <ListIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
