@@ -1,12 +1,18 @@
 import { searchLocations } from '#/api/geocoding';
 import { Location } from '#/api/types';
-import { LocationFooter } from '#/components/LocationFooter';
+import { SavedLocationCard } from '#/components/SavedLocationCard';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 import { BlurView } from 'expo-blur';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+const MOCK_SAVED: Location[] = [
+  { lat: 10.7202, lon: 122.5621, name: 'Iloilo City', country: 'Philippines', countryCode: 'PH' },
+  { lat: 35.6762, lon: 139.6503, name: 'Tokyo', country: 'Japan', countryCode: 'JP' },
+  { lat: 51.5074, lon: -0.1278, name: 'London', country: 'United Kingdom', countryCode: 'GB' },
+];
 
 export default function LocationScreen() {
   const headerHeight = useHeaderHeight();
@@ -36,16 +42,27 @@ export default function LocationScreen() {
     });
   }
 
+  function onSelectSavedLocation(index: number) {
+    console.log(index);
+  }
+
   return (
     <View style={styles.root}>
       <ScrollView
-        style={styles.fill}
-        contentContainerStyle={[styles.scrollContent, { paddingTop: headerHeight }]}
+        style={styles.scroll}
+        contentContainerStyle={[styles.content, { paddingTop: headerHeight }]}
       >
+        {MOCK_SAVED.map((location, i) => (
+          <TouchableOpacity
+            key={`${location.lat}-${location.lon}`}
+            activeOpacity={0.8}
+            onPress={() => onSelectSavedLocation(i)}
+          >
+            <SavedLocationCard location={location} />
+          </TouchableOpacity>
+        ))}
         <Text style={styles.paragraph}>Learn more about weather data and map data</Text>
       </ScrollView>
-
-      <LocationFooter />
 
       {isSearching && (
         <BlurView style={[StyleSheet.absoluteFill, { top: headerHeight + 12 }]}>
@@ -76,17 +93,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
-  fill: {
+  scroll: {
     flex: 1,
+  },
+  content: {
+    marginTop: 12,
+    padding: 20,
+    gap: 12,
   },
   paragraph: {
     color: 'rgba(255,255,255,0.60)',
     textAlign: 'center',
     marginTop: 15,
     fontSize: 11,
-  },
-  scrollContent: {
-    padding: 20,
   },
   row: {
     paddingVertical: 10,
