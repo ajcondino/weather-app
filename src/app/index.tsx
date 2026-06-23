@@ -1,62 +1,47 @@
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import PagerView from 'react-native-pager-view';
 
-import { DailyForecastCard } from '#/components/DailyForecastCard';
-import { HourlyForecastCard } from '#/components/HourlyForecastCard';
+import { Location } from '#/api/types';
 import { LocationFooter } from '#/components/LocationFooter';
-import { SkyBackground } from '#/components/SkyBackground';
-import WeatherHeader from '#/components/WeatherHeader';
+import { WeatherCard } from '#/components/WeatherCard';
 import { useLocation } from '#/hooks/useLocation';
-import { useCurrentWeather } from '#/hooks/useWeather';
+import { useState } from 'react';
+
+const MOCK_SAVED: Location[] = [
+  { lat: 10.7202, lon: 122.5621, name: 'Iloilo City', country: 'Philippines', countryCode: 'PH' },
+  { lat: 35.6762, lon: 139.6503, name: 'Tokyo', country: 'Japan', countryCode: 'JP' },
+  { lat: 51.5074, lon: -0.1278, name: 'London', country: 'United Kingdom', countryCode: 'GB' },
+];
 
 export default function HomeScreen() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const { location } = useLocation();
-  const {
-    data: weather,
-    refetch,
-    isRefetching,
-  } = useCurrentWeather(location ? { lat: location.lat, lon: location.lon } : null, location);
+
+  const totalCount = 1 + MOCK_SAVED.length;
 
   return (
-    <View style={styles.root}>
-      <SkyBackground condition={weather?.condition} isDay={weather?.isDay} />
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
+    <View style={styles.container}>
+      <PagerView
+        style={styles.pager}
+        initialPage={0}
+        onPageSelected={(e) => setActiveIndex(e.nativeEvent.position)}
       >
-        <WeatherHeader weather={weather} />
-
-        {weather && (
-          <>
-            {weather.hourly.length > 0 && (
-              <View style={styles.hourlyWrapper}>
-                <HourlyForecastCard hours={weather?.hourly} />
-              </View>
-            )}
-
-            {weather.daily.length > 0 && (
-              <View style={styles.dailyWrapper}>
-                <DailyForecastCard days={weather?.daily} />
-              </View>
-            )}
-          </>
-        )}
-      </ScrollView>
-      <LocationFooter />
+        <WeatherCard key="gps" location={location} />
+        {MOCK_SAVED.map((location) => (
+          <WeatherCard key={`${location.lat}-${location.lon}`} location={location} />
+        ))}
+      </PagerView>
+      <LocationFooter count={totalCount} activeIndex={activeIndex} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
+  container: {
     flex: 1,
   },
-  scrollContent: {
-    padding: 20,
-  },
-  hourlyWrapper: {
-    marginTop: 10,
-  },
-  dailyWrapper: {
-    marginTop: 10,
+  pager: {
+    flex: 1,
   },
 });
