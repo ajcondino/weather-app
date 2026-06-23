@@ -5,7 +5,12 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PageDots } from './PageDots';
 
-export function LocationFooter() {
+interface LocationFooterProps {
+  count: number;
+  activeIndex: number;
+}
+
+export function LocationFooter({ count, activeIndex }: LocationFooterProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -19,7 +24,7 @@ export function LocationFooter() {
         <MapIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
 
-      <PageDots count={3} activeIndex={2} />
+      <PageDots count={count} activeIndex={activeIndex} />
 
       <Pressable onPress={() => router.push('/location')}>
         <ListIcon color="#fff" size={28} strokeWidth={1.2} />
