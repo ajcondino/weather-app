@@ -1,6 +1,7 @@
 import { searchLocations } from '#/api/geocoding';
 import { Location } from '#/api/types';
 import { SavedLocationCard } from '#/components/SavedLocationCard';
+import { usePagerStore } from '#/store/pagerStore';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 import { BlurView } from 'expo-blur';
@@ -19,6 +20,8 @@ export default function LocationScreen() {
   const router = useRouter();
   const { query } = useLocalSearchParams<{ query?: string }>();
   const [debouncedQuery, setDebouncedQuery] = useState(query ?? '');
+
+  const requestPage = usePagerStore((s) => s.requestPage);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -43,7 +46,9 @@ export default function LocationScreen() {
   }
 
   function onSelectSavedLocation(index: number) {
-    console.log(index);
+    // Page 0 is the current location from GPS, saved locations start at page 1, so offset by 1
+    requestPage(1 + index);
+    router.back();
   }
 
   return (

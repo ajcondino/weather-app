@@ -5,7 +5,8 @@ import { Location } from '#/api/types';
 import { LocationFooter } from '#/components/LocationFooter';
 import { WeatherCard } from '#/components/WeatherCard';
 import { useLocation } from '#/hooks/useLocation';
-import { useState } from 'react';
+import { usePagerStore } from '#/store/pagerStore';
+import { useEffect, useRef, useState } from 'react';
 
 const MOCK_SAVED: Location[] = [
   { lat: 10.7202, lon: 122.5621, name: 'Iloilo City', country: 'Philippines', countryCode: 'PH' },
@@ -15,14 +16,25 @@ const MOCK_SAVED: Location[] = [
 
 export default function HomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const pagerRef = useRef<PagerView>(null);
 
   const { location } = useLocation();
+
+  const requestedPage = usePagerStore((s) => s.requestedPage);
+  const clearRequestedPage = usePagerStore((s) => s.clearRequestedPage);
+
+  useEffect(() => {
+    if (requestedPage === null) return;
+    pagerRef.current?.setPage(requestedPage);
+    clearRequestedPage();
+  }, [requestedPage]);
 
   const totalCount = 1 + MOCK_SAVED.length;
 
   return (
     <View style={styles.container}>
       <PagerView
+        ref={pagerRef}
         style={styles.pager}
         initialPage={0}
         onPageSelected={(e) => setActiveIndex(e.nativeEvent.position)}
