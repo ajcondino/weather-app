@@ -1,18 +1,13 @@
 import { StyleSheet, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
-import { Location } from '#/api/types';
 import { LocationFooter } from '#/components/LocationFooter';
+import { SkyBackground } from '#/components/SkyBackground';
 import { WeatherCard } from '#/components/WeatherCard';
 import { useLocation } from '#/hooks/useLocation';
 import { usePagerStore } from '#/store/pagerStore';
+import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useEffect, useRef, useState } from 'react';
-
-const MOCK_SAVED: Location[] = [
-  { lat: 10.7202, lon: 122.5621, name: 'Iloilo City', country: 'Philippines', countryCode: 'PH' },
-  { lat: 35.6762, lon: 139.6503, name: 'Tokyo', country: 'Japan', countryCode: 'JP' },
-  { lat: 51.5074, lon: -0.1278, name: 'London', country: 'United Kingdom', countryCode: 'GB' },
-];
 
 export default function HomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -23,13 +18,25 @@ export default function HomeScreen() {
   const requestedPage = usePagerStore((s) => s.requestedPage);
   const clearRequestedPage = usePagerStore((s) => s.clearRequestedPage);
 
+  const savedLocations = useSavedLocationsStore((s) => s.locations);
+  const isLoaded = useSavedLocationsStore((s) => s.isLoaded);
+
   useEffect(() => {
     if (requestedPage === null) return;
     pagerRef.current?.setPage(requestedPage);
     clearRequestedPage();
   }, [requestedPage]);
 
-  const totalCount = 1 + MOCK_SAVED.length;
+  if (!isLoaded) {
+    return (
+      // TODO: Add a loading card
+      <View style={styles.container}>
+        <SkyBackground />
+      </View>
+    );
+  }
+
+  const totalCount = 1 + savedLocations.length;
 
   return (
     <View style={styles.container}>
@@ -40,7 +47,7 @@ export default function HomeScreen() {
         onPageSelected={(e) => setActiveIndex(e.nativeEvent.position)}
       >
         <WeatherCard key="gps" location={location} />
-        {MOCK_SAVED.map((location) => (
+        {savedLocations.map((location) => (
           <WeatherCard key={`${location.lat}-${location.lon}`} location={location} />
         ))}
       </PagerView>
