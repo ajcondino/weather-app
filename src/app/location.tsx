@@ -2,18 +2,13 @@ import { searchLocations } from '#/api/geocoding';
 import { Location } from '#/api/types';
 import { SavedLocationCard } from '#/components/SavedLocationCard';
 import { usePagerStore } from '#/store/pagerStore';
+import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 import { BlurView } from 'expo-blur';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-const MOCK_SAVED: Location[] = [
-  { lat: 10.7202, lon: 122.5621, name: 'Iloilo City', country: 'Philippines', countryCode: 'PH' },
-  { lat: 35.6762, lon: 139.6503, name: 'Tokyo', country: 'Japan', countryCode: 'JP' },
-  { lat: 51.5074, lon: -0.1278, name: 'London', country: 'United Kingdom', countryCode: 'GB' },
-];
 
 export default function LocationScreen() {
   const headerHeight = useHeaderHeight();
@@ -22,6 +17,8 @@ export default function LocationScreen() {
   const [debouncedQuery, setDebouncedQuery] = useState(query ?? '');
 
   const requestPage = usePagerStore((s) => s.requestPage);
+
+  const savedLocations = useSavedLocationsStore((s) => s.locations);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -57,7 +54,7 @@ export default function LocationScreen() {
         style={styles.scroll}
         contentContainerStyle={[styles.content, { paddingTop: headerHeight }]}
       >
-        {MOCK_SAVED.map((location, i) => (
+        {savedLocations.map((location, i) => (
           <TouchableOpacity
             key={`${location.lat}-${location.lon}`}
             activeOpacity={0.8}
