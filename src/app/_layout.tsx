@@ -44,7 +44,12 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="weather-preview"
-          options={{ presentation: 'modal', gestureEnabled: true }}
+          options={{
+            presentation: 'modal',
+            gestureEnabled: true,
+            headerShown: true,
+            headerTransparent: true,
+          }}
         />
       </Stack>
     </QueryClientProvider>

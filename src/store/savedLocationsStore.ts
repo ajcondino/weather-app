@@ -11,6 +11,7 @@ interface SavedLocationStore {
   load: () => Promise<void>;
   saveLocation: (loc: Location) => void;
   removeLocation: (lat: number, lon: number) => void;
+  isSaved: (lat: number, lon: number) => boolean;
 }
 
 export const useSavedLocationsStore = create<SavedLocationStore>((set, get) => ({
@@ -22,12 +23,23 @@ export const useSavedLocationsStore = create<SavedLocationStore>((set, get) => (
     set({ locations: stored ?? [], isLoaded: true });
   },
 
-  saveLocation: (loc) => {
+  isSaved: (lat, lon) => {
     const { locations } = get();
+    return locations.some(
+      // Coordinates are stored as numbers but arrive from route params as
+      // strings (e.g. "14.5995"). Number("14.5995") === 14.5995 is true,
+      // but floating point precision can cause subtle mismatches if the
+      // value is ever processed or serialized differently along the way
+      // (e.g. 14.59950000001 !== 14.5995). Comparing as strings avoids
+      // this entirely — same digits, same string, guaranteed match.
+      (l) => String(l.lat) === String(lat) && String(l.lon) === String(lon),
+    );
+  },
 
-    // Check duplicates
-    const alreadySaved = locations.some((l) => l.lat === loc.lat && l.lon === loc.lon);
-    if (alreadySaved || locations.length >= MAX_LOCATIONS) return;
+  saveLocation: (loc) => {
+    const { locations, isSaved } = get();
+
+    if (isSaved(loc.lat, loc.lon) || locations.length >= MAX_LOCATIONS) return;
 
     const updated = [...locations, loc];
     set({ locations: updated });
@@ -36,7 +48,10 @@ export const useSavedLocationsStore = create<SavedLocationStore>((set, get) => (
 
   removeLocation: (lat, lon) => {
     const { locations } = get();
-    const updated = locations.filter((l) => !(l.lat === lat && l.lon === lon));
+    const updated = locations.filter(
+      // See isSaved() for why we compare as strings instead of numbers.
+      (l) => !(String(l.lat) === String(lat) && String(l.lon) === String(lon)),
+    );
     set({ locations: updated });
     setItem(LOCATIONS_KEY, updated);
   },
