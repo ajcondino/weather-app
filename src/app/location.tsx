@@ -18,7 +18,7 @@ const MOCK_SAVED: Location[] = [
 export default function LocationScreen() {
   const headerHeight = useHeaderHeight();
   const router = useRouter();
-  const { query } = useLocalSearchParams<{ query?: string }>();
+  const { query, isFocused } = useLocalSearchParams<{ query?: string; isFocused?: string }>();
   const [debouncedQuery, setDebouncedQuery] = useState(query ?? '');
 
   const requestPage = usePagerStore((s) => s.requestPage);
@@ -30,7 +30,7 @@ export default function LocationScreen() {
     return () => clearTimeout(timeout);
   }, [query]);
 
-  const isSearching = debouncedQuery.length > 0;
+  const isSearching = debouncedQuery.length > 0 || isFocused === 'true';
 
   const { data: searchResults = [] } = useQuery({
     queryKey: ['locationsSearch', debouncedQuery],
