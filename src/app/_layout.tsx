@@ -26,6 +26,12 @@ export default function RootLayout() {
               onChangeText: (event) => {
                 router.setParams({ query: event.nativeEvent.text });
               },
+              onFocus: () => {
+                router.setParams({ isFocused: 'true' });
+              },
+              onBlur: () => {
+                router.setParams({ isFocused: 'false' });
+              },
             },
           }}
         />
