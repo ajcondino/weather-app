@@ -3,22 +3,26 @@ import { Location } from '#/api/types';
 import { SavedLocationCard } from '#/components/SavedLocationCard';
 import { usePagerStore } from '#/store/pagerStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
-import { BlurView } from 'expo-blur';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { Trash2Icon } from 'lucide-react-native';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable } from 'react-native-gesture-handler';
+import ReanimatedSwipeable, {
+  SwipeableMethods,
+} from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 export default function LocationScreen() {
-  const headerHeight = useHeaderHeight();
   const router = useRouter();
   const { query, isFocused } = useLocalSearchParams<{ query?: string; isFocused?: string }>();
   const [debouncedQuery, setDebouncedQuery] = useState(query ?? '');
+  const openSwipeableRef = useRef<SwipeableMethods>(null);
 
   const requestPage = usePagerStore((s) => s.requestPage);
 
   const savedLocations = useSavedLocationsStore((s) => s.locations);
+  const removeLocation = useSavedLocationsStore((s) => s.removeLocation);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -50,24 +54,26 @@ export default function LocationScreen() {
   return (
     <View style={styles.root}>
       <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
         style={styles.scroll}
-        contentContainerStyle={[styles.content, { paddingTop: headerHeight }]}
+        contentContainerStyle={styles.content}
       >
         {savedLocations.map((location, i) => (
-          <TouchableOpacity
+          <SwipeableLocationRow
             key={`${location.lat}-${location.lon}`}
-            activeOpacity={0.8}
+            location={location}
             onPress={() => onSelectSavedLocation(i)}
-          >
-            <SavedLocationCard location={location} />
-          </TouchableOpacity>
+            onDelete={() => removeLocation(location.lat, location.lon)}
+            openSwipeableRef={openSwipeableRef}
+          />
         ))}
         <Text style={styles.paragraph}>Learn more about weather data and map data</Text>
       </ScrollView>
 
       {isSearching && (
-        <BlurView style={[StyleSheet.absoluteFill, { top: headerHeight + 12 }]}>
+        <View style={StyleSheet.absoluteFill}>
           <FlatList
+            style={[{ backgroundColor: '#000' }, debouncedQuery.length > 0 && { opacity: 80 }]}
             data={searchResults}
             keyExtractor={(item) => item.name + item.lat + item.lon}
             renderItem={({ item }) => (
@@ -83,9 +89,52 @@ export default function LocationScreen() {
               </TouchableOpacity>
             )}
           />
-        </BlurView>
+        </View>
       )}
     </View>
+  );
+}
+
+function SwipeableLocationRow({
+  location,
+  onPress,
+  onDelete,
+  openSwipeableRef,
+}: {
+  location: Location;
+  onPress: () => void;
+  onDelete: () => void;
+  openSwipeableRef: React.RefObject<SwipeableMethods | null>;
+}) {
+  const swipeableRef = useRef<SwipeableMethods>(null);
+
+  return (
+    <ReanimatedSwipeable
+      ref={swipeableRef}
+      friction={2}
+      overshootRight={false}
+      rightThreshold={40}
+      renderRightActions={() => (
+        <Pressable style={styles.deleteAction} onPress={onDelete}>
+          <Trash2Icon color="#fff" />
+        </Pressable>
+      )}
+      onSwipeableWillOpen={() => {
+        if (openSwipeableRef.current && openSwipeableRef.current !== swipeableRef.current) {
+          openSwipeableRef.current.close();
+        }
+        openSwipeableRef.current = swipeableRef.current;
+      }}
+      onSwipeableClose={() => {
+        if (openSwipeableRef.current === swipeableRef.current) {
+          openSwipeableRef.current = null;
+        }
+      }}
+    >
+      <Pressable onPress={onPress}>
+        <SavedLocationCard location={location} />
+      </Pressable>
+    </ReanimatedSwipeable>
   );
 }
 
@@ -98,8 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    marginTop: 12,
-    padding: 20,
+    paddingHorizontal: 20,
     gap: 12,
   },
   paragraph: {
@@ -118,5 +166,13 @@ const styles = StyleSheet.create({
   },
   resultSecondary: {
     color: 'rgba(255,255,255,0.60)',
+  },
+  deleteAction: {
+    borderRadius: 18,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    marginLeft: 12,
+    alignItems: 'center',
+    width: 80,
   },
 });
