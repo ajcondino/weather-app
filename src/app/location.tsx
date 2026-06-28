@@ -43,8 +43,7 @@ export default function LocationScreen() {
   }
 
   function onSelectSavedLocation(index: number) {
-    // Page 0 is the current location from GPS, saved locations start at page 1, so offset by 1
-    requestPage(1 + index);
+    requestPage(index);
     router.back();
   }
 
