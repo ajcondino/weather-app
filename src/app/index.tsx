@@ -4,16 +4,16 @@ import PagerView from 'react-native-pager-view';
 import { LocationFooter } from '#/components/LocationFooter';
 import { SkyBackground } from '#/components/SkyBackground';
 import { WeatherCard } from '#/components/WeatherCard';
-import { useLocation } from '#/hooks/useLocation';
 import { usePagerStore } from '#/store/pagerStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
+import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   const [activeIndex, setActiveIndex] = useState(0);
   const pagerRef = useRef<PagerView>(null);
-
-  const { location } = useLocation();
 
   const requestedPage = usePagerStore((s) => s.requestedPage);
   const clearRequestedPage = usePagerStore((s) => s.clearRequestedPage);
@@ -25,18 +25,20 @@ export default function HomeScreen() {
     if (requestedPage === null) return;
     pagerRef.current?.setPage(requestedPage);
     clearRequestedPage();
-  }, [requestedPage]);
+  }, [requestedPage, clearRequestedPage]);
 
   if (!isLoaded) {
     return (
-      // TODO: Add a loading card
       <View style={styles.container}>
         <SkyBackground />
       </View>
     );
   }
 
-  const totalCount = 1 + savedLocations.length;
+  if (savedLocations.length === 0) {
+    router.replace('/location');
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -46,12 +48,11 @@ export default function HomeScreen() {
         initialPage={0}
         onPageSelected={(e) => setActiveIndex(e.nativeEvent.position)}
       >
-        <WeatherCard key="gps" location={location} />
         {savedLocations.map((location) => (
           <WeatherCard key={`${location.lat}-${location.lon}`} location={location} />
         ))}
       </PagerView>
-      <LocationFooter count={totalCount} activeIndex={activeIndex} />
+      <LocationFooter count={savedLocations.length} activeIndex={activeIndex} />
     </View>
   );
 }

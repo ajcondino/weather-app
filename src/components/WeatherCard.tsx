@@ -36,7 +36,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
 
             {weather.daily.length > 0 && (
               <View style={styles.dailyWrapper}>
-                <DailyForecastCard days={weather?.daily} />
+                <DailyForecastCard days={weather?.daily} currentTempC={weather.temperatureC} />
               </View>
             )}
           </>
