@@ -3,8 +3,10 @@ import { Location } from '#/api/types';
 import { SavedLocationCard } from '#/components/SavedLocationCard';
 import { usePagerStore } from '#/store/pagerStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
+import { useSearchStore } from '#/store/searchStore';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Trash2Icon } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -15,7 +17,11 @@ import ReanimatedSwipeable, {
 
 export default function LocationScreen() {
   const router = useRouter();
-  const { query, isFocused } = useLocalSearchParams<{ query?: string; isFocused?: string }>();
+  const headerHeight = useHeaderHeight();
+
+  const query = useSearchStore((s) => s.query);
+  const isFocused = useSearchStore((s) => s.isFocused);
+
   const [debouncedQuery, setDebouncedQuery] = useState(query ?? '');
   const openSwipeableRef = useRef<SwipeableMethods>(null);
 
@@ -31,7 +37,7 @@ export default function LocationScreen() {
     return () => clearTimeout(timeout);
   }, [query]);
 
-  const isSearching = debouncedQuery.length > 0 || isFocused === 'true';
+  const isSearching = debouncedQuery.length > 0 || isFocused;
 
   const { data: searchResults = [] } = useQuery({
     queryKey: ['locationsSearch', debouncedQuery],
@@ -71,7 +77,7 @@ export default function LocationScreen() {
       </ScrollView>
 
       {isSearching && (
-        <View style={StyleSheet.absoluteFill}>
+        <View style={[StyleSheet.absoluteFill, { top: headerHeight }]}>
           <FlatList
             style={[{ backgroundColor: '#000' }, debouncedQuery.length > 0 && { opacity: 80 }]}
             data={searchResults}

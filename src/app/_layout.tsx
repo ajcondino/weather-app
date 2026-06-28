@@ -1,12 +1,12 @@
 import { queryClient } from '#/lib/queryClient';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
+import { useSearchStore } from '#/store/searchStore';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function RootLayout() {
-  const router = useRouter();
   const load = useSavedLocationsStore((s) => s.load);
 
   useEffect(() => {
@@ -40,13 +40,13 @@ export default function RootLayout() {
                 placeholder: 'Search for a city or airport',
                 hideWhenScrolling: false,
                 onChangeText: (event) => {
-                  router.setParams({ query: event.nativeEvent.text });
+                  useSearchStore.getState().setQuery(event.nativeEvent.text);
                 },
                 onFocus: () => {
-                  router.setParams({ isFocused: 'true' });
+                  useSearchStore.getState().setFocused(true);
                 },
                 onBlur: () => {
-                  router.setParams({ isFocused: 'false' });
+                  useSearchStore.getState().setFocused(false);
                 },
               },
             }}

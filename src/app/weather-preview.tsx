@@ -1,6 +1,7 @@
 import { Location } from '#/api/types';
 import { WeatherCard } from '#/components/WeatherCard';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
+import { useSearchStore } from '#/store/searchStore';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -34,6 +35,7 @@ export default function WeatherPreviewModal() {
   function onAdd() {
     if (alreadySaved) return;
     saveLocation(location);
+    useSearchStore.getState().clear();
     router.back();
   }
 
