@@ -1,15 +1,18 @@
 import { queryClient } from '#/lib/queryClient';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
+import { useUnitsStore } from '#/store/unitsStore';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function RootLayout() {
-  const load = useSavedLocationsStore((s) => s.load);
+  const loadLocations = useSavedLocationsStore((s) => s.load);
+  const loadUnits = useUnitsStore((s) => s.load);
 
   useEffect(() => {
-    load();
+    loadLocations();
+    loadUnits();
   }, []);
 
   return (
