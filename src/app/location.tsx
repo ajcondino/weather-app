@@ -1,5 +1,6 @@
 import { searchLocations } from '#/api/geocoding';
 import { Location } from '#/api/types';
+import { NetworkOfflineLabel } from '#/components/NetworkIndicator';
 import { SavedLocationCard } from '#/components/SavedLocationCard';
 import { usePagerStore } from '#/store/pagerStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
@@ -10,8 +11,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigation, useRouter } from 'expo-router';
 import { CircleEllipsis, Trash2Icon } from 'lucide-react-native';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import type { SearchBarCommands } from 'react-native-screens';
-
 import {
   ActionSheetIOS,
   FlatList,
@@ -27,6 +26,7 @@ import { Pressable } from 'react-native-gesture-handler';
 import ReanimatedSwipeable, {
   SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
+import type { SearchBarCommands } from 'react-native-screens';
 
 export default function LocationScreen() {
   const router = useRouter();
@@ -134,6 +134,7 @@ export default function LocationScreen() {
         style={styles.scroll}
         contentContainerStyle={styles.content}
       >
+        <NetworkOfflineLabel />
         {savedLocations.map((location, i) => (
           <SwipeableLocationRow
             key={`${location.lat}-${location.lon}`}
