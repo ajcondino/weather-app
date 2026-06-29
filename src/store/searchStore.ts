@@ -25,5 +25,6 @@ export const useSearchStore = create<SearchStore>((set) => ({
     // Clear native search bar
     useSearchStore.getState().searchBarRef?.current?.blur();
     useSearchStore.getState().searchBarRef?.current?.clearText();
+    useSearchStore.getState().searchBarRef?.current?.cancelSearch();
   },
 }));
