@@ -10,12 +10,16 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigation, useRouter } from 'expo-router';
 import { CircleEllipsis, Trash2Icon } from 'lucide-react-native';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type { SearchBarCommands } from 'react-native-screens';
+
 import {
   ActionSheetIOS,
   FlatList,
+  NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
   Text,
+  TextInputFocusEventData,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -33,6 +37,10 @@ export default function LocationScreen() {
   const isFocused = useSearchStore((s) => s.isFocused);
 
   const [debouncedQuery, setDebouncedQuery] = useState(query ?? '');
+
+  const searchBarRef = useRef<SearchBarCommands>(null);
+  const setSearchBarRef = useSearchStore((s) => s.setSearchBarRef);
+
   const openSwipeableRef = useRef<SwipeableMethods>(null);
 
   const requestPage = usePagerStore((s) => s.requestPage);
@@ -43,7 +51,23 @@ export default function LocationScreen() {
   const unit = useUnitsStore((s) => s.unit);
 
   useLayoutEffect(() => {
+    setSearchBarRef(searchBarRef);
+
     navigation.setOptions({
+      headerSearchBarOptions: {
+        ref: searchBarRef,
+        placeholder: 'Search for a city or airport',
+        hideWhenScrolling: false,
+        onChangeText: (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+          useSearchStore.getState().setQuery(event.nativeEvent.text);
+        },
+        onFocus: () => {
+          useSearchStore.getState().setFocused(true);
+        },
+        onBlur: () => {
+          useSearchStore.getState().setFocused(false);
+        },
+      },
       headerRight: () => (
         <Pressable onPress={showUnitsMenu} hitSlop={12}>
           <CircleEllipsis color="#fff" size={24} />
@@ -99,7 +123,8 @@ export default function LocationScreen() {
 
   function onSelectSavedLocation(index: number) {
     requestPage(index);
-    router.back();
+    if (router.canGoBack()) return router.back();
+    router.replace('/');
   }
 
   return (

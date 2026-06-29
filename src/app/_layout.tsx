@@ -1,6 +1,5 @@
 import { queryClient } from '#/lib/queryClient';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
-import { useSearchStore } from '#/store/searchStore';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
@@ -35,19 +34,6 @@ export default function RootLayout() {
               headerShadowVisible: false,
               headerStyle: {
                 backgroundColor: '#000',
-              },
-              headerSearchBarOptions: {
-                placeholder: 'Search for a city or airport',
-                hideWhenScrolling: false,
-                onChangeText: (event) => {
-                  useSearchStore.getState().setQuery(event.nativeEvent.text);
-                },
-                onFocus: () => {
-                  useSearchStore.getState().setFocused(true);
-                },
-                onBlur: () => {
-                  useSearchStore.getState().setFocused(false);
-                },
               },
             }}
           />
