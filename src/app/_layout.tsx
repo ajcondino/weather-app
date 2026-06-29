@@ -1,3 +1,4 @@
+import { NetworkBanner } from '#/components/NetworkIndicator';
 import { queryClient } from '#/lib/queryClient';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useUnitsStore } from '#/store/unitsStore';
@@ -50,6 +51,7 @@ export default function RootLayout() {
             }}
           />
         </Stack>
+        <NetworkBanner />
       </QueryClientProvider>
     </GestureHandlerRootView>
   );
