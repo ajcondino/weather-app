@@ -56,3 +56,5 @@ export interface DailyForecast {
   precipitationProbabilityMax: number;
   uvIndex: number;
 }
+
+export type TemperatureUnit = 'C' | 'F';

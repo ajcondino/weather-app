@@ -1,5 +1,7 @@
 import { HourlyForecast } from '#/api/types';
+import { useUnitsStore } from '#/store/unitsStore';
 import { getWeatherIcon } from '#/themes/weatherIcons';
+import { formatTemp } from '#/utils/temperature';
 import { BlurView } from 'expo-blur';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { CardHeader } from './CardHeader';
@@ -28,6 +30,8 @@ export function HourlyForecastCard({ hours }: HourlyForecastCardProps) {
 }
 
 function HourCell({ hour, isNow }: { hour: HourlyForecast; isNow: boolean }) {
+  const unit = useUnitsStore((s) => s.unit);
+
   const Icon = getWeatherIcon(hour.condition, hour.isDay);
   const label = isNow ? 'Now' : formatHour(hour.time);
 
@@ -35,7 +39,7 @@ function HourCell({ hour, isNow }: { hour: HourlyForecast; isNow: boolean }) {
     <View style={styles.cell}>
       <Text style={styles.hourLabel}>{label}</Text>
       <Icon color="#fff" size={28} />
-      <Text style={styles.temp}>{Math.round(hour.temperatureC)}°</Text>
+      <Text style={styles.temp}>{formatTemp(hour.temperatureC, unit)}</Text>
     </View>
   );
 }
