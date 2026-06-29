@@ -4,12 +4,21 @@ import { SavedLocationCard } from '#/components/SavedLocationCard';
 import { usePagerStore } from '#/store/pagerStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useSearchStore } from '#/store/searchStore';
+import { useUnitsStore } from '#/store/unitsStore';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
-import { Trash2Icon } from 'lucide-react-native';
-import { useEffect, useRef, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation, useRouter } from 'expo-router';
+import { CircleEllipsis, Trash2Icon } from 'lucide-react-native';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  ActionSheetIOS,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Pressable } from 'react-native-gesture-handler';
 import ReanimatedSwipeable, {
   SwipeableMethods,
@@ -17,6 +26,7 @@ import ReanimatedSwipeable, {
 
 export default function LocationScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
   const query = useSearchStore((s) => s.query);
@@ -29,6 +39,41 @@ export default function LocationScreen() {
 
   const savedLocations = useSavedLocationsStore((s) => s.locations);
   const removeLocation = useSavedLocationsStore((s) => s.removeLocation);
+
+  const unit = useUnitsStore((s) => s.unit);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={showUnitsMenu} hitSlop={12}>
+          <CircleEllipsis color="#fff" size={24} />
+        </Pressable>
+      ),
+    });
+  }, [navigation, unit]);
+
+  function showUnitsMenu() {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        title: 'Temperature',
+        options: [
+          'Cancel',
+          `°C — Celsius${unit === 'C' ? ' ✓' : ''}`,
+          `°F — Fahrenheit${unit === 'F' ? ' ✓' : ''}`,
+        ],
+        cancelButtonIndex: 0,
+        userInterfaceStyle: 'dark',
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1 && unit !== 'C') {
+          useUnitsStore.getState().toggleUnit();
+        }
+        if (buttonIndex === 2 && unit !== 'F') {
+          useUnitsStore.getState().toggleUnit();
+        }
+      },
+    );
+  }
 
   useEffect(() => {
     const timeout = setTimeout(() => {

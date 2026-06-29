@@ -1,5 +1,7 @@
 import { DailyForecast } from '#/api/types';
+import { useUnitsStore } from '#/store/unitsStore';
 import { getWeatherIcon } from '#/themes/weatherIcons';
+import { formatTemp } from '#/utils/temperature';
 import { BlurView } from 'expo-blur';
 import { StyleSheet, Text, View } from 'react-native';
 import { CardHeader } from './CardHeader';
@@ -52,6 +54,7 @@ function DayRow({
   weekMaxC: number;
   currentTempC?: number;
 }) {
+  const unit = useUnitsStore((s) => s.unit);
   // Open-Meteo's daily data is per-day aggregrate, not split by time of day
   // so we'll always be using the day variant for icons to match conventions on most weather apps.
   const Icon = getWeatherIcon(day.condition, true);
@@ -72,7 +75,7 @@ function DayRow({
         </Text>
       </View>
 
-      <Text style={styles.minTemp}>{Math.round(day.minTempC)}°</Text>
+      <Text style={styles.minTemp}>{formatTemp(day.minTempC, unit)}</Text>
 
       <TemperatureRangeBar
         minTempC={day.minTempC}
@@ -83,7 +86,7 @@ function DayRow({
         width={90}
       />
 
-      <Text style={styles.maxTemp}>{Math.round(day.maxTempC)}°</Text>
+      <Text style={styles.maxTemp}>{formatTemp(day.maxTempC, unit)}</Text>
     </View>
   );
 }
