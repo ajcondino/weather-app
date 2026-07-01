@@ -19,7 +19,7 @@ export function NetworkBanner() {
 
   if (isOnline || isExcluded) return null;
 
-  const formatted = lastOnlineAt!.toLocaleTimeString(undefined, {
+  const formatted = lastOnlineAt?.toLocaleTimeString(undefined, {
     hour: 'numeric',
     minute: '2-digit',
   });
@@ -44,7 +44,7 @@ export function NetworkOfflineLabel() {
 
   if (isOnline) return null;
 
-  const formatted = lastOnlineAt!.toLocaleTimeString(undefined, {
+  const formatted = lastOnlineAt?.toLocaleTimeString(undefined, {
     hour: 'numeric',
     minute: '2-digit',
   });
