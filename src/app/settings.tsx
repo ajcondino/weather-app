@@ -1,3 +1,4 @@
+import { useNotificationsStore } from '#/store/notificationsStore';
 import { useUnitsStore } from '#/store/unitsStore';
 import { formatTemp } from '#/utils/temperature';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -9,6 +10,8 @@ export default function SettingsModal() {
   const headerHeight = useHeaderHeight();
   const unit = useUnitsStore((s) => s.unit);
   const toggleUnit = useUnitsStore((s) => s.toggleUnit);
+  const toggleNotification = useNotificationsStore((s) => s.toggle);
+  const enabled = useNotificationsStore((s) => s.enabled);
 
   function onDone() {
     router.back();
@@ -73,8 +76,8 @@ export default function SettingsModal() {
             <View style={styles.row}>
               <Text style={styles.rowLabel}>Weather Alerts</Text>
               <Switch
-                value={false}
-                onValueChange={() => {}}
+                value={enabled}
+                onValueChange={toggleNotification}
                 trackColor={{ false: 'rgba(255,255,255,0.2)', true: '#4FA8E8' }}
                 thumbColor="#fff"
               />
