@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.6)',
     textTransform: 'uppercase',
     letterSpacing: 0.4,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     marginTop: 28,
     marginBottom: 8,
     marginLeft: 4,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginLeft: 4,
     lineHeight: 18,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
   },
   card: {
     backgroundColor: 'rgba(255,255,255,0.08)',
@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'rgba(255,255,255,0.08)',
   },
   rowLeft: {
