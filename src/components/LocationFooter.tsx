@@ -1,6 +1,6 @@
 import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
-import { ListIcon, MapIcon } from 'lucide-react-native';
+import { ListIcon, SettingsIcon } from 'lucide-react-native';
 import { Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PageDots } from './PageDots';
@@ -20,14 +20,14 @@ export function LocationFooter({ count, activeIndex }: LocationFooterProps) {
       tint="systemMaterial"
       style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}
     >
-      <Pressable onPress={() => router.push('/')}>
-        <MapIcon color="#fff" size={28} strokeWidth={1.2} />
+      <Pressable onPress={() => router.push('/location')}>
+        <ListIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
 
       <PageDots count={count} activeIndex={activeIndex} />
 
-      <Pressable onPress={() => router.push('/location')}>
-        <ListIcon color="#fff" size={28} strokeWidth={1.2} />
+      <Pressable onPress={() => router.push('/settings')}>
+        <SettingsIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
     </BlurView>
   );

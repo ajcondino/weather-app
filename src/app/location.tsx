@@ -9,10 +9,9 @@ import { useUnitsStore } from '#/store/unitsStore';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigation, useRouter } from 'expo-router';
-import { CircleEllipsis, Trash2Icon } from 'lucide-react-native';
+import { SettingsIcon, Trash2Icon } from 'lucide-react-native';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
-  ActionSheetIOS,
   FlatList,
   NativeSyntheticEvent,
   ScrollView,
@@ -69,35 +68,12 @@ export default function LocationScreen() {
         },
       },
       headerRight: () => (
-        <Pressable onPress={showUnitsMenu} hitSlop={12}>
-          <CircleEllipsis color="#fff" size={24} />
+        <Pressable onPress={() => router.push('/settings')} hitSlop={12}>
+          <SettingsIcon color="#fff" size={24} />
         </Pressable>
       ),
     });
   }, [navigation, unit]);
-
-  function showUnitsMenu() {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        title: 'Temperature',
-        options: [
-          'Cancel',
-          `°C — Celsius${unit === 'C' ? ' ✓' : ''}`,
-          `°F — Fahrenheit${unit === 'F' ? ' ✓' : ''}`,
-        ],
-        cancelButtonIndex: 0,
-        userInterfaceStyle: 'dark',
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 1 && unit !== 'C') {
-          useUnitsStore.getState().toggleUnit();
-        }
-        if (buttonIndex === 2 && unit !== 'F') {
-          useUnitsStore.getState().toggleUnit();
-        }
-      },
-    );
-  }
 
   useEffect(() => {
     const timeout = setTimeout(() => {

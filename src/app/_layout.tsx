@@ -50,6 +50,15 @@ export default function RootLayout() {
               headerTransparent: true,
             }}
           />
+          <Stack.Screen
+            name="settings"
+            options={{
+              presentation: 'modal',
+              gestureEnabled: true,
+              headerShown: true,
+              headerTransparent: true,
+            }}
+          />
         </Stack>
         <NetworkBanner />
       </QueryClientProvider>
