@@ -1,5 +1,6 @@
 import { NetworkBanner } from '#/components/NetworkIndicator';
 import { queryClient } from '#/lib/queryClient';
+import { useNotificationsStore } from '#/store/notificationsStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useUnitsStore } from '#/store/unitsStore';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -10,10 +11,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function RootLayout() {
   const loadLocations = useSavedLocationsStore((s) => s.load);
   const loadUnits = useUnitsStore((s) => s.load);
+  const loadNotifications = useNotificationsStore((s) => s.load);
 
   useEffect(() => {
     loadLocations();
     loadUnits();
+    loadNotifications();
   }, []);
 
   return (
