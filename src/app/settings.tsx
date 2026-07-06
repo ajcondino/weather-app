@@ -1,8 +1,9 @@
-import { useNotificationsStore } from '#/store/notificationsStore';
+import { MAX_SUBSCRIPTIONS, useNotificationsStore } from '#/store/notificationsStore';
 import { useUnitsStore } from '#/store/unitsStore';
 import { formatTemp } from '#/utils/temperature';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Stack, useRouter } from 'expo-router';
+import { BellOffIcon } from 'lucide-react-native';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
 export default function SettingsModal() {
@@ -10,8 +11,10 @@ export default function SettingsModal() {
   const headerHeight = useHeaderHeight();
   const unit = useUnitsStore((s) => s.unit);
   const toggleUnit = useUnitsStore((s) => s.toggleUnit);
-  const toggleNotification = useNotificationsStore((s) => s.toggle);
-  const enabled = useNotificationsStore((s) => s.enabled);
+  const notificationsEnabled = useNotificationsStore((s) => s.enabled);
+  const toggleNotifications = useNotificationsStore((s) => s.toggle);
+  const subscribedLocations = useNotificationsStore((s) => s.subscribedLocations);
+  const unsubscribeLocation = useNotificationsStore((s) => s.unsubscribeLocation);
 
   function onDone() {
     router.back();
@@ -76,8 +79,8 @@ export default function SettingsModal() {
             <View style={styles.row}>
               <Text style={styles.rowLabel}>Weather Alerts</Text>
               <Switch
-                value={enabled}
-                onValueChange={toggleNotification}
+                value={notificationsEnabled}
+                onValueChange={toggleNotifications}
                 trackColor={{ false: 'rgba(255,255,255,0.2)', true: '#4FA8E8' }}
                 thumbColor="#fff"
               />
@@ -86,6 +89,42 @@ export default function SettingsModal() {
           <Text style={styles.sectionFooter}>
             Receive alerts for severe weather conditions in your saved locations.
           </Text>
+
+          {/* Subscribed locations section — only shown when notifications are on */}
+          {notificationsEnabled && (
+            <>
+              <Text style={styles.sectionTitle}>
+                Alert Locations ({subscribedLocations.length}/{MAX_SUBSCRIPTIONS})
+              </Text>
+              <View style={styles.card}>
+                {subscribedLocations.length === 0 ? (
+                  <View style={styles.emptyRow}>
+                    <Text style={styles.emptyText}>
+                      No locations subscribed. Swipe right on a saved location to subscribe.
+                    </Text>
+                  </View>
+                ) : (
+                  subscribedLocations.map((location, i) => (
+                    <View
+                      key={`${location.lat},${location.lon}`}
+                      style={[styles.row, i === subscribedLocations.length - 1 && styles.rowLast]}
+                    >
+                      <Text style={styles.rowLabel}>{location.name}</Text>
+                      <Pressable
+                        onPress={() => unsubscribeLocation(location.lat, location.lon)}
+                        hitSlop={12}
+                      >
+                        <BellOffIcon color="rgba(255,255,255,0.5)" size={18} />
+                      </Pressable>
+                    </View>
+                  ))
+                )}
+              </View>
+              <Text style={styles.sectionFooter}>
+                Tap the bell icon to remove a location from alerts.
+              </Text>
+            </>
+          )}
         </ScrollView>
       </View>
     </>
@@ -174,6 +213,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   doneButton: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  emptyRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.4)',
+    lineHeight: 20,
+  },
+  rowLast: {
+    borderBottomWidth: 0,
     fontSize: 17,
     fontWeight: '600',
     color: '#fff',
