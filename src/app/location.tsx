@@ -2,6 +2,7 @@ import { searchLocations } from '#/api/geocoding';
 import { Location } from '#/api/types';
 import { NetworkOfflineLabel } from '#/components/NetworkIndicator';
 import { SavedLocationCard } from '#/components/SavedLocationCard';
+import { locationKey, useNotificationsStore } from '#/store/notificationsStore';
 import { usePagerStore } from '#/store/pagerStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useSearchStore } from '#/store/searchStore';
@@ -9,7 +10,7 @@ import { useUnitsStore } from '#/store/unitsStore';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigation, useRouter } from 'expo-router';
-import { SettingsIcon, Trash2Icon } from 'lucide-react-native';
+import { BellIcon, BellOffIcon, SettingsIcon, Trash2Icon } from 'lucide-react-native';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   FlatList,
@@ -46,6 +47,8 @@ export default function LocationScreen() {
 
   const savedLocations = useSavedLocationsStore((s) => s.locations);
   const removeLocation = useSavedLocationsStore((s) => s.removeLocation);
+
+  const unsubscribeLocation = useNotificationsStore((s) => s.unsubscribeLocation);
 
   const unit = useUnitsStore((s) => s.unit);
 
@@ -116,7 +119,10 @@ export default function LocationScreen() {
             key={`${location.lat}-${location.lon}`}
             location={location}
             onPress={() => onSelectSavedLocation(i)}
-            onDelete={() => removeLocation(location.lat, location.lon)}
+            onDelete={() => {
+              removeLocation(location.lat, location.lon);
+              unsubscribeLocation(location.lat, location.lon);
+            }}
             openSwipeableRef={openSwipeableRef}
           />
         ))}
@@ -161,6 +167,22 @@ function SwipeableLocationRow({
 }) {
   const swipeableRef = useRef<SwipeableMethods>(null);
 
+  const subscribedKeys = useNotificationsStore((s) => s.subscribedKeys);
+  const subscribeLocation = useNotificationsStore((s) => s.subscribeLocation);
+  const unsubscribeLocation = useNotificationsStore((s) => s.unsubscribeLocation);
+  const notificationsEnabled = useNotificationsStore((s) => s.enabled);
+
+  const subscribed = subscribedKeys.includes(locationKey(location.lat, location.lon));
+
+  function onBellPress() {
+    if (subscribed) {
+      unsubscribeLocation(location.lat, location.lon);
+    } else {
+      subscribeLocation(location);
+    }
+    swipeableRef.current?.close();
+  }
+
   return (
     <ReanimatedSwipeable
       ref={swipeableRef}
@@ -172,6 +194,16 @@ function SwipeableLocationRow({
           <Trash2Icon color="#fff" />
         </Pressable>
       )}
+      renderLeftActions={() =>
+        notificationsEnabled ? (
+          <Pressable
+            style={[styles.bellAction, subscribed && styles.bellActionActive]}
+            onPress={onBellPress}
+          >
+            {subscribed ? <BellOffIcon color="#fff" /> : <BellIcon color="#fff" />}
+          </Pressable>
+        ) : null
+      }
       onSwipeableWillOpen={() => {
         if (openSwipeableRef.current && openSwipeableRef.current !== swipeableRef.current) {
           openSwipeableRef.current.close();
@@ -227,5 +259,17 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     alignItems: 'center',
     width: 80,
+  },
+  bellAction: {
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    marginRight: 12,
+    alignItems: 'center',
+    width: 80,
+    gap: 4,
+  },
+  bellActionActive: {
+    backgroundColor: '#4FA8E8',
   },
 });
