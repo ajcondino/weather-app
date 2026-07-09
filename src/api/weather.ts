@@ -134,7 +134,7 @@ export async function getCurrentWeather(
 
   const daily: DailyForecast[] = d.time.map((date, i) => ({
     date,
-    condition: toCondition(h.weather_code[i]),
+    condition: toCondition(d.weather_code[i]),
     maxTempC: d.temperature_2m_max[i],
     minTempC: d.temperature_2m_min[i],
     precipitationMm: d.precipitation_sum[i],
