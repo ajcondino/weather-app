@@ -1,70 +1,21 @@
-import { NetworkBanner } from '#/components/NetworkIndicator';
-import { queryClient } from '#/lib/queryClient';
-import { useNotificationsStore } from '#/store/notificationsStore';
-import { useSavedLocationsStore } from '#/store/savedLocationsStore';
-import { useUnitsStore } from '#/store/unitsStore';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ClerkProvider } from '@clerk/expo';
+import { tokenCache } from '@clerk/expo/token-cache';
+import { Slot } from 'expo-router';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
+// TODO: validate env using zod or similar library
+if (!publishableKey) {
+  throw new Error('Add your Clerk Publishable Key to the .env file');
+}
 
 export default function RootLayout() {
-  const loadLocations = useSavedLocationsStore((s) => s.load);
-  const loadUnits = useUnitsStore((s) => s.load);
-  const loadNotifications = useNotificationsStore((s) => s.load);
-
-  useEffect(() => {
-    loadLocations();
-    loadUnits();
-    loadNotifications();
-  }, []);
-
   return (
-    <GestureHandlerRootView>
-      <QueryClientProvider client={queryClient}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            headerBackVisible: false,
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen
-            name="location"
-            options={{
-              headerShown: true,
-              headerTitle: 'Weather',
-              headerLargeTitle: true,
-              headerTransparent: true,
-              headerBlurEffect: 'dark',
-              headerLargeTitleShadowVisible: false,
-              headerShadowVisible: false,
-              headerStyle: {
-                backgroundColor: '#000',
-              },
-            }}
-          />
-          <Stack.Screen
-            name="weather-preview"
-            options={{
-              presentation: 'modal',
-              gestureEnabled: true,
-              headerShown: true,
-              headerTransparent: true,
-            }}
-          />
-          <Stack.Screen
-            name="settings"
-            options={{
-              presentation: 'modal',
-              gestureEnabled: true,
-              headerShown: true,
-              headerTransparent: true,
-            }}
-          />
-        </Stack>
-        <NetworkBanner />
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+        <Slot />
+      </ClerkProvider>
+    </SafeAreaProvider>
   );
 }
