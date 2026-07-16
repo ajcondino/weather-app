@@ -124,23 +124,59 @@ export async function getCurrentWeather(
     observedAt: c.time,
   };
 
-  const hourly: HourlyForecast[] = h.time.map((time, i) => ({
-    time,
-    condition: toCondition(h.weather_code[i]),
-    temperatureC: h.temperature_2m[i],
-    precipitationMm: h.precipitation[i],
-    isDay: h.is_day[i] === 1,
-  }));
+  const hourly: HourlyForecast[] = h.time.map((time, i) => {
+    const weatherCode = h.weather_code[i];
+    const temperature = h.temperature_2m[i];
+    const precipitation = h.precipitation[i];
+    const isDay = h.is_day[i];
 
-  const daily: DailyForecast[] = d.time.map((date, i) => ({
-    date,
-    condition: toCondition(d.weather_code[i]),
-    maxTempC: d.temperature_2m_max[i],
-    minTempC: d.temperature_2m_min[i],
-    precipitationMm: d.precipitation_sum[i],
-    precipitationProbabilityMax: d.precipitation_probability_max[i],
-    uvIndex: d.uv_index_max[i],
-  }));
+    if (
+      weatherCode === undefined ||
+      temperature === undefined ||
+      precipitation === undefined ||
+      isDay === undefined
+    ) {
+      throw new Error(`Invalid hourly forecast data at index ${i}`);
+    }
+
+    return {
+      time,
+      condition: toCondition(weatherCode),
+      temperatureC: temperature,
+      precipitationMm: precipitation,
+      isDay: isDay === 1,
+    };
+  });
+
+  const daily: DailyForecast[] = d.time.map((date, i) => {
+    const weatherCode = d.weather_code[i];
+    const maxTemp = d.temperature_2m_max[i];
+    const minTemp = d.temperature_2m_min[i];
+    const precipitation = d.precipitation_sum[i];
+    const precipitationProbability = d.precipitation_probability_max[i];
+    const uvIndex = d.uv_index_max[i];
+
+    if (
+      weatherCode === undefined ||
+      maxTemp === undefined ||
+      minTemp === undefined ||
+      precipitation === undefined ||
+      precipitationProbability === undefined ||
+      uvIndex === undefined
+    ) {
+      throw new Error(`Invalid daily forecast data at index ${i}`);
+    }
+
+    return {
+      date,
+      condition: toCondition(weatherCode),
+      maxTempC: maxTemp,
+      minTempC: minTemp,
+      precipitationMm: precipitation,
+      precipitationProbabilityMax: precipitationProbability,
+      uvIndex,
+    };
+  });
 
   return {
     location,
