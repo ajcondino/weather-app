@@ -42,7 +42,7 @@ export function SavedLocationCard({ location }: SavedLocationCardProps) {
           </Text>
           {weather && (
             <Text style={styles.highLow} numberOfLines={1}>
-              H: {weather.daily[0].maxTempC}° L: {weather.daily[0].minTempC}°
+              H: {weather.daily[0]?.maxTempC}° L: {weather.daily[0]?.minTempC}°
             </Text>
           )}
         </View>
