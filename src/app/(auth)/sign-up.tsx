@@ -3,6 +3,7 @@ import { authStyles } from '#/styles/authStyles';
 import { useAuth, useSignUp } from '@clerk/expo';
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
@@ -22,6 +23,7 @@ export default function SignUpScreen() {
   const router = useRouter();
   const { signUp, errors, fetchStatus } = useSignUp();
   const { isSignedIn } = useAuth();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +36,7 @@ export default function SignUpScreen() {
     });
 
     if (error) {
-      Alert.alert('Sign up failed', error.message);
+      Alert.alert(t('auth.signUp.signUpFailedTitle'), error.message);
       return;
     }
 
@@ -70,18 +72,18 @@ export default function SignUpScreen() {
           <View style={authStyles.container}>
             <SkyBackground isDay={false} />
             <View style={authStyles.header}>
-              <Text style={authStyles.title}>Check your email</Text>
-              <Text style={authStyles.subtitle}>Enter your verification code to continue.</Text>
+              <Text style={authStyles.title}>{t('auth.signUp.verifyTitle')}</Text>
+              <Text style={authStyles.subtitle}>{t('auth.signUp.verifySubtitle')}</Text>
             </View>
 
             <View style={authStyles.form}>
               <View style={authStyles.inputWrapper}>
-                <Text style={authStyles.inputLabel}>Verification code</Text>
+                <Text style={authStyles.inputLabel}>{t('auth.signUp.codeLabel')}</Text>
                 <TextInput
                   style={authStyles.input}
                   value={code}
                   onChangeText={setCode}
-                  placeholder="Enter code"
+                  placeholder={t('auth.signUp.codePlaceholder')}
                   placeholderTextColor="rgba(255,255,255,0.3)"
                   keyboardType="number-pad"
                   textContentType="oneTimeCode"
@@ -99,7 +101,7 @@ export default function SignUpScreen() {
                 {fetchStatus === 'fetching' ? (
                   <ActivityIndicator color="#000" />
                 ) : (
-                  <Text style={authStyles.buttonText}>Verify email</Text>
+                  <Text style={authStyles.buttonText}>{t('auth.signUp.verifyButton')}</Text>
                 )}
               </Pressable>
 
@@ -107,7 +109,7 @@ export default function SignUpScreen() {
                 style={styles.secondaryButton}
                 onPress={() => signUp.verifications.sendEmailCode()}
               >
-                <Text style={styles.secondaryButtonText}>Resend code</Text>
+                <Text style={styles.secondaryButtonText}>{t('auth.signUp.resendButton')}</Text>
               </Pressable>
             </View>
           </View>
@@ -129,18 +131,18 @@ export default function SignUpScreen() {
       >
         <SkyBackground isDay={false} />
         <View style={authStyles.header}>
-          <Text style={authStyles.title}>Create account</Text>
-          <Text style={authStyles.subtitle}>Sign up to get started</Text>
+          <Text style={authStyles.title}>{t('auth.signUp.title')}</Text>
+          <Text style={authStyles.subtitle}>{t('auth.signUp.subtitle')}</Text>
         </View>
 
         <View style={authStyles.form}>
           <View style={authStyles.inputWrapper}>
-            <Text style={authStyles.inputLabel}>Email</Text>
+            <Text style={authStyles.inputLabel}>{t('auth.signUp.emailLabel')}</Text>
             <TextInput
               style={authStyles.input}
               value={email}
               onChangeText={setEmail}
-              placeholder="you@example.com"
+              placeholder={t('auth.signUp.emailPlaceholder')}
               placeholderTextColor="rgba(255,255,255,0.3)"
               autoCapitalize="none"
               autoCorrect={false}
@@ -153,12 +155,12 @@ export default function SignUpScreen() {
           </View>
 
           <View style={authStyles.inputWrapper}>
-            <Text style={authStyles.inputLabel}>Password</Text>
+            <Text style={authStyles.inputLabel}>{t('auth.signUp.passwordLabel')}</Text>
             <TextInput
               style={authStyles.input}
               value={password}
               onChangeText={setPassword}
-              placeholder="••••••••"
+              placeholder={t('auth.signUp.passwordPlaceholder')}
               placeholderTextColor="rgba(255,255,255,0.3)"
               secureTextEntry
               textContentType="newPassword"
@@ -179,16 +181,16 @@ export default function SignUpScreen() {
             {fetchStatus === 'fetching' ? (
               <ActivityIndicator color="#000" />
             ) : (
-              <Text style={authStyles.buttonText}>Create account</Text>
+              <Text style={authStyles.buttonText}>{t('auth.signUp.submitButton')}</Text>
             )}
           </Pressable>
         </View>
 
         <View style={authStyles.footer}>
-          <Text style={authStyles.footerText}>Already have an account? </Text>
+          <Text style={authStyles.footerText}>{t('auth.signUp.footerText')}</Text>
           <Link href="/sign-in" asChild>
             <Pressable>
-              <Text style={authStyles.footerLink}>Sign in</Text>
+              <Text style={authStyles.footerLink}>{t('auth.signUp.footerLink')}</Text>
             </Pressable>
           </Link>
         </View>
