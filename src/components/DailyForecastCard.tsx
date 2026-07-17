@@ -3,6 +3,7 @@ import { useUnitsStore } from '#/store/unitsStore';
 import { getWeatherIcon } from '#/themes/weatherIcons';
 import { formatTemp } from '#/utils/temperature';
 import { BlurView } from 'expo-blur';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 import { CardHeader } from './CardHeader';
 import { TemperatureRangeBar } from './TemperatureRangeBar';
@@ -14,6 +15,8 @@ interface DailyForecastCardProps {
 }
 
 export function DailyForecastCard({ days, currentTempC }: DailyForecastCardProps) {
+  const { t } = useTranslation();
+
   if (days.length === 0) return null;
 
   // Computed once across the whole week
@@ -22,7 +25,10 @@ export function DailyForecastCard({ days, currentTempC }: DailyForecastCardProps
 
   return (
     <BlurView intensity={30} tint="dark" style={styles.card}>
-      <CardHeader title={`${days.length}-Day Forecast`} style={styles.header} />
+      <CardHeader
+        title={t('weather.dailyForecastTitle', { count: days.length })}
+        style={styles.header}
+      />
 
       {days.map((day, i) => (
         <DayRow

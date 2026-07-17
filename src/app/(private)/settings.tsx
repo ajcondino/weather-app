@@ -5,6 +5,7 @@ import { useAuth, useUser } from '@clerk/expo';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Stack, useRouter } from 'expo-router';
 import { BellOffIcon, LogOutIcon, UserIcon } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
 export default function SettingsModal() {
@@ -12,6 +13,7 @@ export default function SettingsModal() {
   const headerHeight = useHeaderHeight();
   const { signOut } = useAuth();
   const { user } = useUser();
+  const { t } = useTranslation();
 
   const unit = useUnitsStore((s) => s.unit);
   const toggleUnit = useUnitsStore((s) => s.toggleUnit);
@@ -33,11 +35,11 @@ export default function SettingsModal() {
     <>
       <Stack.Screen
         options={{
-          headerTitle: 'Settings',
+          headerTitle: t('settings.headerTitle'),
           headerTitleStyle: { color: '#fff' },
           headerRight: () => (
             <Pressable onPress={onDone} hitSlop={12}>
-              <Text style={styles.doneButton}>Done</Text>
+              <Text style={styles.doneButton}>{t('settings.doneButton')}</Text>
             </Pressable>
           ),
         }}
@@ -56,7 +58,7 @@ export default function SettingsModal() {
                   <Text style={styles.profileName}>
                     {user?.firstName && user?.lastName
                       ? `${user.firstName} ${user.lastName}`
-                      : (user?.firstName ?? 'Account')}
+                      : (user?.firstName ?? t('settings.accountFallbackName'))}
                   </Text>
                   <Text style={styles.profileEmail}>{user?.primaryEmailAddress?.emailAddress}</Text>
                 </View>
@@ -65,13 +67,13 @@ export default function SettingsModal() {
           </View>
 
           {/* Units section */}
-          <Text style={styles.sectionTitle}>Units</Text>
+          <Text style={styles.sectionTitle}>{t('settings.unitsSectionTitle')}</Text>
           <View style={styles.card}>
             <View style={styles.row}>
               <View style={styles.rowLeft}>
-                <Text style={styles.rowLabel}>Temperature</Text>
+                <Text style={styles.rowLabel}>{t('settings.temperatureLabel')}</Text>
                 <Text style={styles.rowValue}>
-                  {unit === 'C' ? 'Celsius' : 'Fahrenheit'} (
+                  {unit === 'C' ? t('settings.celsius') : t('settings.fahrenheit')} (
                   {formatTemp(0, unit).replace('0', '').trim()})
                 </Text>
               </View>
@@ -99,13 +101,13 @@ export default function SettingsModal() {
               </View>
             </View>
           </View>
-          <Text style={styles.sectionFooter}>Applied to all locations across the app.</Text>
+          <Text style={styles.sectionFooter}>{t('settings.unitsFooter')}</Text>
 
           {/* Notifications section */}
-          <Text style={styles.sectionTitle}>Notifications</Text>
+          <Text style={styles.sectionTitle}>{t('settings.notificationsSectionTitle')}</Text>
           <View style={styles.card}>
             <View style={styles.row}>
-              <Text style={styles.rowLabel}>Weather Alerts</Text>
+              <Text style={styles.rowLabel}>{t('settings.weatherAlertsLabel')}</Text>
               <Switch
                 value={notificationsEnabled}
                 onValueChange={toggleNotifications}
@@ -114,22 +116,21 @@ export default function SettingsModal() {
               />
             </View>
           </View>
-          <Text style={styles.sectionFooter}>
-            Receive alerts for severe weather conditions in your saved locations.
-          </Text>
+          <Text style={styles.sectionFooter}>{t('settings.notificationsFooter')}</Text>
 
           {/* Subscribed locations section — only shown when notifications are on */}
           {notificationsEnabled && (
             <>
               <Text style={styles.sectionTitle}>
-                Alert Locations ({subscribedLocations.length}/{MAX_SUBSCRIPTIONS})
+                {t('settings.alertLocationsSectionTitle', {
+                  count: subscribedLocations.length,
+                  max: MAX_SUBSCRIPTIONS,
+                })}
               </Text>
               <View style={styles.card}>
                 {subscribedLocations.length === 0 ? (
                   <View style={styles.emptyRow}>
-                    <Text style={styles.emptyText}>
-                      No locations subscribed. Swipe right on a saved location to subscribe.
-                    </Text>
+                    <Text style={styles.emptyText}>{t('settings.emptyLocationsText')}</Text>
                   </View>
                 ) : (
                   subscribedLocations.map((location, i) => (
@@ -148,16 +149,14 @@ export default function SettingsModal() {
                   ))
                 )}
               </View>
-              <Text style={styles.sectionFooter}>
-                Tap the bell icon to remove a location from alerts.
-              </Text>
+              <Text style={styles.sectionFooter}>{t('settings.alertLocationsFooter')}</Text>
             </>
           )}
 
           {/* Sign out */}
           <Pressable style={styles.signOutButton} onPress={handleSignOut}>
             <LogOutIcon color="#FF6B6B" size={18} />
-            <Text style={styles.signOutText}>Sign out</Text>
+            <Text style={styles.signOutText}>{t('settings.signOutButton')}</Text>
           </Pressable>
         </ScrollView>
       </View>

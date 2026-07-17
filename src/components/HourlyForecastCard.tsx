@@ -3,6 +3,7 @@ import { useUnitsStore } from '#/store/unitsStore';
 import { getWeatherIcon } from '#/themes/weatherIcons';
 import { formatTemp } from '#/utils/temperature';
 import { BlurView } from 'expo-blur';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { CardHeader } from './CardHeader';
 
@@ -11,11 +12,13 @@ interface HourlyForecastCardProps {
 }
 
 export function HourlyForecastCard({ hours }: HourlyForecastCardProps) {
+  const { t } = useTranslation();
+
   if (hours.length === 0) return null;
 
   return (
     <BlurView intensity={30} tint="dark" style={styles.card}>
-      <CardHeader title="Hourly Forecast" style={styles.header} />
+      <CardHeader title={t('weather.hourlyForecastTitle')} style={styles.header} />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

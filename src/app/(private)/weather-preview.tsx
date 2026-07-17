@@ -3,12 +3,14 @@ import { WeatherCard } from '#/components/WeatherCard';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useSearchStore } from '#/store/searchStore';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function WeatherPreviewModal() {
   const router = useRouter();
   const saveLocation = useSavedLocationsStore((s) => s.saveLocation);
   const savedLocations = useSavedLocationsStore((s) => s.locations);
+  const { t } = useTranslation();
 
   const { lat, lon, name, country, countryCode } = useLocalSearchParams<{
     lat: string;
@@ -47,14 +49,14 @@ export default function WeatherPreviewModal() {
           headerLeft: () => {
             return (
               <Pressable onPress={onCancel}>
-                <Text style={styles.cancelButton}>Cancel</Text>
+                <Text style={styles.cancelButton}>{t('weatherPreview.cancel')}</Text>
               </Pressable>
             );
           },
           headerRight: () => {
             return alreadySaved ? undefined : (
               <Pressable onPress={onAdd}>
-                <Text style={styles.addButton}>Add</Text>
+                <Text style={styles.addButton}>{t('weatherPreview.add')}</Text>
               </Pressable>
             );
           },

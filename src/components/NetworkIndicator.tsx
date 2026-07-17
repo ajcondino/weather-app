@@ -2,6 +2,7 @@ import { useNetworkStatus } from '#/hooks/useNetworkStatus';
 import { BlurView } from 'expo-blur';
 import { useSegments } from 'expo-router';
 import { WifiOff } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,6 +13,7 @@ const BANNER_EXCLUDED_ROUTES: Segment[] = ['location'];
 export function NetworkBanner() {
   const insets = useSafeAreaInsets();
   const segments = useSegments();
+  const { t } = useTranslation();
 
   const { isOnline, lastOnlineAt } = useNetworkStatus();
 
@@ -32,7 +34,7 @@ export function NetworkBanner() {
     >
       <View style={styles.bannerRow}>
         <WifiOff color="#fff" size={16} />
-        <Text style={styles.bannerText}>No Internet Connection</Text>
+        <Text style={styles.bannerText}>{t('network.offline')}</Text>
       </View>
       <Text style={styles.bannerTextSecondary}>Last online: {formatted}</Text>
     </BlurView>
@@ -41,6 +43,7 @@ export function NetworkBanner() {
 
 export function NetworkOfflineLabel() {
   const { isOnline, lastOnlineAt } = useNetworkStatus();
+  const { t } = useTranslation();
 
   if (isOnline) return null;
 
@@ -53,7 +56,7 @@ export function NetworkOfflineLabel() {
     <View style={styles.labelRoot}>
       <View style={styles.labelRow}>
         <WifiOff color="#fff" size={20} />
-        <Text style={styles.labelText}>No Internet Connection</Text>
+        <Text style={styles.labelText}>{t('network.offline')}</Text>
       </View>
       <Text style={styles.labelTextSecondary}>Last online: {formatted}</Text>
     </View>
