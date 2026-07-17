@@ -1,4 +1,5 @@
 import { Location } from '#/api/types';
+import i18n from '#/i18n';
 import { getItem, setItem } from '#/utils/storage';
 import * as Notifications from 'expo-notifications';
 import { Alert } from 'react-native';
@@ -89,8 +90,8 @@ export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
     // Limit subscriptions
     if (subscribedKeys.length >= MAX_SUBSCRIPTIONS) {
       Alert.alert(
-        'Subscription limit reached',
-        `You can only subscribe to ${MAX_SUBSCRIPTIONS} locations for weather alerts. Unsubscribe on to add another.`,
+        i18n.t('notifications.subscriptionLimitTitle'),
+        i18n.t('notifications.subscriptionLimitBody', { max: MAX_SUBSCRIPTIONS }),
       );
       return;
     }

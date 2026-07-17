@@ -1,4 +1,5 @@
 import { DailyForecast, Location, WeatherCondition } from '#/api/types';
+import i18n from '#/i18n';
 import * as Notifications from 'expo-notifications';
 
 const ALERT_CONDITIONS: WeatherCondition[] = ['rain', 'thunderstorm', 'drizzle', 'snow', 'fog'];
@@ -21,7 +22,7 @@ export async function scheduleWeatherAlerts(
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: `Weather Alert for ${location.name}`,
+        title: i18n.t('notifications.alertTitle', { location: location.name }),
         body: getAlertBody(forecast),
         sound: true,
       },
@@ -47,14 +48,20 @@ function getAlertBody(forecast: DailyForecast): string {
   const parts: string[] = [];
 
   if (forecast.precipitationProbabilityMax >= 70) {
-    parts.push(`${Math.round(forecast.precipitationProbabilityMax)}% chance of precipitation`);
+    parts.push(
+      i18n.t('notifications.precipitationChance', {
+        percent: Math.round(forecast.precipitationProbabilityMax),
+      }),
+    );
   }
 
   if (forecast.precipitationMm > 0) {
-    parts.push(`${forecast.precipitationMm.toFixed(1)}mm expected`);
+    parts.push(
+      i18n.t('notifications.precipitationAmount', { amount: forecast.precipitationMm.toFixed(1) }),
+    );
   }
 
-  return parts.length > 0 ? parts.join(' · ') : 'Check the forecast for details';
+  return parts.length > 0 ? parts.join(' · ') : i18n.t('notifications.checkForecast');
 }
 
 function getAlertDate(day: DailyForecast): Date {

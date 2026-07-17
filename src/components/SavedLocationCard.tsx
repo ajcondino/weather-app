@@ -1,9 +1,9 @@
 import { Location } from '#/api/types';
 import { useCurrentWeather } from '#/hooks/useWeather';
 import { useUnitsStore } from '#/store/unitsStore';
-import { WEATHER_DESCRIPTIONS } from '#/themes/weatherDescriptions';
 import { formatTemp } from '#/utils/temperature';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { SkyBackground } from './SkyBackground';
 
 interface SavedLocationCardProps {
@@ -12,6 +12,7 @@ interface SavedLocationCardProps {
 
 export function SavedLocationCard({ location }: SavedLocationCardProps) {
   const unit = useUnitsStore((s) => s.unit);
+  const { t } = useTranslation();
 
   const { data: weather } = useCurrentWeather({ lat: location.lat, lon: location.lon }, location);
 
@@ -31,7 +32,7 @@ export function SavedLocationCard({ location }: SavedLocationCardProps) {
             <Text style={styles.time}>{localTime}</Text>
           </View>
           <Text style={styles.condition} numberOfLines={1}>
-            {weather ? WEATHER_DESCRIPTIONS[weather.condition] : ''}
+            {weather ? t(`weather.conditions.${weather.condition}`) : ''}
           </Text>
         </View>
 

@@ -1,8 +1,8 @@
 import { CurrentWeather } from '#/api/types';
 import { useUnitsStore } from '#/store/unitsStore';
-import { WEATHER_DESCRIPTIONS } from '#/themes/weatherDescriptions';
 import { formatTemp } from '#/utils/temperature';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 interface WeatherHeaderProps {
   weather?: CurrentWeather;
@@ -10,6 +10,7 @@ interface WeatherHeaderProps {
 
 export default function WeatherHeader({ weather }: WeatherHeaderProps) {
   const unit = useUnitsStore((s) => s.unit);
+  const { t } = useTranslation();
 
   if (!weather) {
     return (
@@ -23,7 +24,7 @@ export default function WeatherHeader({ weather }: WeatherHeaderProps) {
     <View style={styles.container}>
       <Text style={styles.location}>{weather.location.name}</Text>
       <Text style={styles.temperature}>{formatTemp(weather.temperatureC, unit)}</Text>
-      <Text style={styles.condition}>{WEATHER_DESCRIPTIONS[weather.condition]}</Text>
+      <Text style={styles.condition}>{t(`weather.conditions.${weather.condition}`)}</Text>
       <Text style={styles.highLow}>
         H: {weather.daily[0]?.maxTempC}° L: {weather.daily[0]?.minTempC}°
       </Text>
