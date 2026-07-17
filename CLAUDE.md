@@ -69,3 +69,7 @@ Sky backgrounds are generated, not asset-based: `skyGradient.ts` defines a hand-
 ### Auth
 
 Clerk (`@clerk/expo`) handles auth end-to-end; token cache is `expo-secure-store`-backed via `@clerk/expo/token-cache`. Requires `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` in the environment (`.env.development.local` locally) — the root layout throws immediately if it's missing.
+
+## IMPORTANT
+
+- **YOU MUST run `npm test` before reporting any task complete. No exceptions.**
