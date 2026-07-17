@@ -3,6 +3,7 @@ import { authStyles } from '#/styles/authStyles';
 import { useSignIn } from '@clerk/expo';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
@@ -19,6 +20,7 @@ import {
 export default function SignInScreen() {
   const { signIn, fetchStatus } = useSignIn();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,7 +32,7 @@ export default function SignInScreen() {
     });
 
     if (error) {
-      Alert.alert('Sign in failed', 'Incorrect email or password.');
+      Alert.alert(t('auth.signIn.signInFailedTitle'), t('auth.signIn.signInFailedMessage'));
       return;
     }
 
@@ -54,19 +56,19 @@ export default function SignInScreen() {
           <SkyBackground isDay={false} />
           {/* Header */}
           <View style={authStyles.header}>
-            <Text style={authStyles.title}>Howdy!</Text>
-            <Text style={authStyles.subtitle}>Sign in to your account</Text>
+            <Text style={authStyles.title}>{t('auth.signIn.title')}</Text>
+            <Text style={authStyles.subtitle}>{t('auth.signIn.subtitle')}</Text>
           </View>
 
           {/* Form */}
           <View style={authStyles.form}>
             <View style={authStyles.inputWrapper}>
-              <Text style={authStyles.inputLabel}>Email</Text>
+              <Text style={authStyles.inputLabel}>{t('auth.signIn.emailLabel')}</Text>
               <TextInput
                 style={authStyles.input}
                 value={email}
                 onChangeText={setEmail}
-                placeholder="you@example.com"
+                placeholder={t('auth.signIn.emailPlaceholder')}
                 placeholderTextColor="rgba(255,255,255,0.3)"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -76,12 +78,12 @@ export default function SignInScreen() {
             </View>
 
             <View style={authStyles.inputWrapper}>
-              <Text style={authStyles.inputLabel}>Password</Text>
+              <Text style={authStyles.inputLabel}>{t('auth.signIn.passwordLabel')}</Text>
               <TextInput
                 style={authStyles.input}
                 value={password}
                 onChangeText={setPassword}
-                placeholder="••••••••"
+                placeholder={t('auth.signIn.passwordPlaceholder')}
                 placeholderTextColor="rgba(255,255,255,0.3)"
                 secureTextEntry
                 textContentType="password"
@@ -99,17 +101,17 @@ export default function SignInScreen() {
               {fetchStatus === 'fetching' ? (
                 <ActivityIndicator color="#000" />
               ) : (
-                <Text style={authStyles.buttonText}>Sign in</Text>
+                <Text style={authStyles.buttonText}>{t('auth.signIn.submitButton')}</Text>
               )}
             </Pressable>
           </View>
 
           {/* Footer */}
           <View style={authStyles.footer}>
-            <Text style={authStyles.footerText}>Don&apos;t have an account? </Text>
+            <Text style={authStyles.footerText}>{t('auth.signIn.footerText')}</Text>
             <Link href="/sign-up" asChild>
               <Pressable>
-                <Text style={authStyles.footerLink}>Sign up</Text>
+                <Text style={authStyles.footerLink}>{t('auth.signIn.footerLink')}</Text>
               </Pressable>
             </Link>
           </View>

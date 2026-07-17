@@ -1,0 +1,89 @@
+{
+  "auth": {
+    "signIn": {
+      "title": "Howdy!",
+      "subtitle": "Sign in to your account",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "submitButton": "Sign in",
+      "footerText": "Don't have an account? ",
+      "footerLink": "Sign up",
+      "signInFailedTitle": "Sign in failed",
+      "signInFailedMessage": "Incorrect email or password."
+    },
+    "signUp": {
+      "verifyTitle": "Check your email",
+      "verifySubtitle": "Enter your verification code to continue.",
+      "codeLabel": "Verification code",
+      "codePlaceholder": "Enter code",
+      "verifyButton": "Verify email",
+      "resendButton": "Resend code",
+      "title": "Create account",
+      "subtitle": "Sign up to get started",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "submitButton": "Create account",
+      "footerText": "Already have an account? ",
+      "footerLink": "Sign in",
+      "signUpFailedTitle": "Sign up failed"
+    }
+  },
+  "settings": {
+    "headerTitle": "Settings",
+    "doneButton": "Done",
+    "accountFallbackName": "Account",
+    "unitsSectionTitle": "Units",
+    "temperatureLabel": "Temperature",
+    "celsius": "Celsius",
+    "fahrenheit": "Fahrenheit",
+    "unitsFooter": "Applied to all locations across the app.",
+    "notificationsSectionTitle": "Notifications",
+    "weatherAlertsLabel": "Weather Alerts",
+    "notificationsFooter": "Receive alerts for severe weather conditions in your saved locations.",
+    "alertLocationsSectionTitle": "Alert Locations ({{count}}/{{max}})",
+    "emptyLocationsText": "No locations subscribed. Swipe right on a saved location to subscribe.",
+    "alertLocationsFooter": "Tap the bell icon to remove a location from alerts.",
+    "signOutButton": "Sign out"
+  },
+  "location": {
+    "searchPlaceholder": "Search for a city or airport",
+    "learnMoreParagraph": "Learn more about weather data and map data"
+  },
+  "weatherPreview": {
+    "cancel": "Cancel",
+    "add": "Add"
+  },
+  "network": {
+    "offline": "No Internet Connection"
+  },
+  "errors": {
+    "genericTitle": "Something went wrong",
+    "tryAgain": "Try again"
+  },
+  "weather": {
+    "conditions": {
+      "clear": "Clear",
+      "partly_cloudy": "Partly Cloudy",
+      "overcast": "Cloudy",
+      "fog": "Foggy",
+      "drizzle": "Drizzle",
+      "rain": "Rain",
+      "snow": "Snow",
+      "thunderstorm": "Thunderstorms"
+    },
+    "hourlyForecastTitle": "Hourly Forecast",
+    "dailyForecastTitle": "{{count}}-Day Forecast"
+  },
+  "notifications": {
+    "alertTitle": "Weather Alert for {{location}}",
+    "precipitationChance": "{{percent}}% chance of precipitation",
+    "precipitationAmount": "{{amount}}mm expected",
+    "checkForecast": "Check the forecast for details",
+    "subscriptionLimitTitle": "Subscription limit reached",
+    "subscriptionLimitBody": "You can only subscribe to {{max}} locations for weather alerts. Unsubscribe on to add another."
+  }
+}

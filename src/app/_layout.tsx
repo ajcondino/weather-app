@@ -1,3 +1,5 @@
+import '#/i18n';
+
 import { ErrorFallback } from '#/components/ErrorFallback';
 import { ClerkProvider } from '@clerk/expo';
 import { tokenCache } from '@clerk/expo/token-cache';

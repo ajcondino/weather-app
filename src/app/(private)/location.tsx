@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigation, useRouter } from 'expo-router';
 import { BellIcon, BellOffIcon, SettingsIcon, Trash2Icon } from 'lucide-react-native';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   NativeSyntheticEvent,
@@ -32,6 +33,7 @@ export default function LocationScreen() {
   const router = useRouter();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
+  const { t } = useTranslation();
 
   const query = useSearchStore((s) => s.query);
   const isFocused = useSearchStore((s) => s.isFocused);
@@ -58,7 +60,7 @@ export default function LocationScreen() {
     navigation.setOptions({
       headerSearchBarOptions: {
         ref: searchBarRef,
-        placeholder: 'Search for a city or airport',
+        placeholder: t('location.searchPlaceholder'),
         hideWhenScrolling: false,
         onChangeText: (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
           useSearchStore.getState().setQuery(event.nativeEvent.text);
@@ -126,7 +128,7 @@ export default function LocationScreen() {
             openSwipeableRef={openSwipeableRef}
           />
         ))}
-        <Text style={styles.paragraph}>Learn more about weather data and map data</Text>
+        <Text style={styles.paragraph}>{t('location.learnMoreParagraph')}</Text>
       </ScrollView>
 
       {isSearching && (
