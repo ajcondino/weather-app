@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from '#/api/fetchWithTimeout';
+
 const BASE_URL = 'https://api.open-meteo.com/v1';
 
 type RequestOptions = Omit<RequestInit, 'body'> & {
@@ -15,7 +17,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
     });
   }
 
-  const response = await fetch(url.toString(), {
+  const response = await fetchWithTimeout(url.toString(), {
     ...options,
     headers: {
       'Content-Type': 'application/json',

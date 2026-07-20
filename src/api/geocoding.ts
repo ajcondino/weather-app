@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '#/api/fetchWithTimeout';
 import { Location } from '#/api/types';
 
 const GEO_BASE = 'https://geocoding-api.open-meteo.com/v1';
@@ -35,7 +36,7 @@ export async function searchLocations(query: string, limit = 5): Promise<Locatio
   if (!query.trim()) return [];
 
   const url = `${GEO_BASE}/search?name=${encodeURIComponent(query)}&count=${limit}`;
-  const res = await fetch(url);
+  const res = await fetchWithTimeout(url);
   const json: GeocodingSearchResponse = await res.json();
 
   return (json.results ?? []).map(toLocation);
