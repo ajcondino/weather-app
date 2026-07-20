@@ -1,7 +1,7 @@
 import { fetchWithTimeout } from '../fetchWithTimeout';
 
 describe('fetchWithTimeout', () => {
-  const originalFetch = global.fetch;
+  const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -9,18 +9,18 @@ describe('fetchWithTimeout', () => {
 
   afterEach(() => {
     jest.useRealTimers();
-    global.fetch = originalFetch;
+    globalThis.fetch = originalFetch;
   });
 
   it('resolves with the response when fetch completes before the timeout', async () => {
     const response = new Response('{}', { status: 200 });
-    global.fetch = jest.fn().mockResolvedValue(response);
+    globalThis.fetch = jest.fn().mockResolvedValue(response);
 
     await expect(fetchWithTimeout('https://example.com', {}, 10_000)).resolves.toBe(response);
   });
 
   it('aborts and throws a timeout error when fetch hangs past the timeout', async () => {
-    global.fetch = jest.fn().mockImplementation(
+    globalThis.fetch = jest.fn().mockImplementation(
       (_url, { signal }: RequestInit) =>
         new Promise((_resolve, reject) => {
           signal?.addEventListener('abort', () => {
@@ -40,7 +40,7 @@ describe('fetchWithTimeout', () => {
   });
 
   it('propagates non-abort errors unchanged', async () => {
-    global.fetch = jest.fn().mockRejectedValue(new Error('Network down'));
+    globalThis.fetch = jest.fn().mockRejectedValue(new Error('Network down'));
 
     await expect(fetchWithTimeout('https://example.com', {}, 10_000)).rejects.toThrow(
       'Network down',
