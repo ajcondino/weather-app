@@ -1,4 +1,5 @@
 import { NetworkBanner } from '#/components/NetworkIndicator';
+import { Toast } from '#/components/Toast';
 import { queryClient } from '#/lib/queryClient';
 import { useNotificationsStore } from '#/store/notificationsStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
@@ -74,6 +75,7 @@ export default function PrivateRoutesLayout() {
           />
         </Stack>
         <NetworkBanner />
+        <Toast />
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

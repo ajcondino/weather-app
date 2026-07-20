@@ -62,7 +62,11 @@
   },
   "errors": {
     "genericTitle": "Something went wrong",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "loadFailed": "Couldn't load your saved data.",
+    "persistFailed": "Couldn't save your changes.",
+    "notificationsFailed": "Couldn't update notification settings.",
+    "dataFailed": "Couldn't load the latest data."
   },
   "weather": {
     "conditions": {
