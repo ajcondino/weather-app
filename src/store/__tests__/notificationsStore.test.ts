@@ -1,4 +1,5 @@
 import type { Location } from '#/api/types';
+import i18n from '#/i18n';
 import { useToastStore } from '#/store/toastStore';
 import { getItem, setItem } from '#/utils/storage';
 import * as Notifications from 'expo-notifications';
@@ -74,7 +75,7 @@ describe('useNotificationsStore', () => {
       expect(state.hasPermission).toBe(false);
       expect(state.enabled).toBe(false);
       expect(state.subscribedLocations).toEqual([]);
-      expect(useToastStore.getState().message).toBe("Couldn't update notification settings.");
+      expect(useToastStore.getState().message).toBe(i18n.t('errors.notificationsFailed'));
     });
   });
 
@@ -125,7 +126,7 @@ describe('useNotificationsStore', () => {
       await useNotificationsStore.getState().toggle();
 
       expect(useNotificationsStore.getState().enabled).toBe(false);
-      expect(useToastStore.getState().message).toBe("Couldn't update notification settings.");
+      expect(useToastStore.getState().message).toBe(i18n.t('errors.notificationsFailed'));
     });
 
     it('shows a toast when cancelling scheduled notifications throws', async () => {
@@ -134,7 +135,7 @@ describe('useNotificationsStore', () => {
 
       await useNotificationsStore.getState().toggle();
 
-      expect(useToastStore.getState().message).toBe("Couldn't update notification settings.");
+      expect(useToastStore.getState().message).toBe(i18n.t('errors.notificationsFailed'));
     });
   });
 });

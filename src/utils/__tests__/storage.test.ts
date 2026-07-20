@@ -1,3 +1,4 @@
+import i18n from '#/i18n';
 import { useToastStore } from '#/store/toastStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getItem, removeItem, setItem } from '../storage';
@@ -44,7 +45,7 @@ describe('storage', () => {
       const result = await getItem('some-key');
 
       expect(result).toBeNull();
-      expect(useToastStore.getState().message).toBe("Couldn't load your saved data.");
+      expect(useToastStore.getState().message).toBe(i18n.t('errors.loadFailed'));
     });
 
     it('returns null and shows a toast when stored JSON is corrupted', async () => {
@@ -53,7 +54,7 @@ describe('storage', () => {
       const result = await getItem('some-key');
 
       expect(result).toBeNull();
-      expect(useToastStore.getState().message).toBe("Couldn't load your saved data.");
+      expect(useToastStore.getState().message).toBe(i18n.t('errors.loadFailed'));
     });
   });
 
@@ -72,7 +73,7 @@ describe('storage', () => {
 
       await setItem('some-key', { a: 1 });
 
-      expect(useToastStore.getState().message).toBe("Couldn't save your changes.");
+      expect(useToastStore.getState().message).toBe(i18n.t('errors.persistFailed'));
     });
   });
 
@@ -90,7 +91,7 @@ describe('storage', () => {
 
       await removeItem('some-key');
 
-      expect(useToastStore.getState().message).toBe("Couldn't save your changes.");
+      expect(useToastStore.getState().message).toBe(i18n.t('errors.persistFailed'));
     });
   });
 });
