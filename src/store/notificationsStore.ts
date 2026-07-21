@@ -1,5 +1,6 @@
 import { Location } from '#/api/types';
 import i18n from '#/i18n';
+import { useToastStore } from '#/store/toastStore';
 import { getItem, setItem } from '#/utils/storage';
 import * as Notifications from 'expo-notifications';
 import { Alert } from 'react-native';
@@ -46,12 +47,19 @@ export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
     // TODO: Centralize local storage keys
     const storedEnabled = await getItem<boolean>('notifications_enabled');
     const storedLocations = await getItem<Location[]>('notification_subscriptions');
-    const { status } = await Notifications.getPermissionsAsync();
+
+    let hasPermission = false;
+    try {
+      const { status } = await Notifications.getPermissionsAsync();
+      hasPermission = status === 'granted';
+    } catch {
+      useToastStore.getState().show(i18n.t('errors.notificationsFailed'));
+    }
 
     const locations = storedLocations ?? [];
     set({
       enabled: storedEnabled ?? false,
-      hasPermission: status === 'granted',
+      hasPermission,
       subscribedLocations: locations,
       subscribedKeys: locations.map((l) => locationKey(l.lat, l.lon)),
     });
@@ -60,23 +68,27 @@ export const useNotificationsStore = create<NotificationsStore>((set, get) => ({
   toggle: async () => {
     const { enabled, hasPermission } = get();
 
-    if (!enabled) {
-      // Turning on - request permission if we don't have it yet
-      if (!hasPermission) {
-        const { status } = await Notifications.requestPermissionsAsync();
-        if (status !== 'granted') {
-          // User denied - stay disabled, we can't update the store
-          return;
+    try {
+      if (!enabled) {
+        // Turning on - request permission if we don't have it yet
+        if (!hasPermission) {
+          const { status } = await Notifications.requestPermissionsAsync();
+          if (status !== 'granted') {
+            // User denied - stay disabled, we can't update the store
+            return;
+          }
+          set({ hasPermission: true });
         }
-        set({ hasPermission: true });
+        set({ enabled: true });
+        setItem('notifications_enabled', true);
+      } else {
+        // Turning off - cancel all scheduled notifications
+        set({ enabled: false });
+        setItem('notifications_enabled', false);
+        await Notifications.cancelAllScheduledNotificationsAsync();
       }
-      set({ enabled: true });
-      setItem('notifications_enabled', true);
-    } else {
-      // Turning off - cancel all scheduled notifications
-      set({ enabled: false });
-      setItem('notifications_enabled', false);
-      await Notifications.cancelAllScheduledNotificationsAsync();
+    } catch {
+      useToastStore.getState().show(i18n.t('errors.notificationsFailed'));
     }
   },
 
