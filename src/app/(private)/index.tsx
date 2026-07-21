@@ -39,6 +39,12 @@ export default function HomeScreen() {
     clearRequestedPage();
   }, [requestedPage, clearRequestedPage]);
 
+  useEffect(() => {
+    if (isLoaded && savedLocations.length === 0) {
+      router.replace('/location');
+    }
+  }, [isLoaded, savedLocations.length, router]);
+
   if (!isLoaded) {
     return (
       <View style={styles.container}>
@@ -48,7 +54,6 @@ export default function HomeScreen() {
   }
 
   if (savedLocations.length === 0) {
-    router.replace('/location');
     return null;
   }
 
