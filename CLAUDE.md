@@ -73,3 +73,4 @@ Clerk (`@clerk/expo`) handles auth end-to-end; token cache is `expo-secure-store
 ## IMPORTANT
 
 - **YOU MUST run `npm test` before reporting any task complete. No exceptions.**
+- **When adding an Expo/native module, YOU MUST use `pnpm expo install <package>` (not `pnpm add`). It resolves the version aligned with the installed Expo SDK. Run `npx expo install --check` any time you suspect a version drift.**
