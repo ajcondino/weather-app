@@ -95,6 +95,29 @@ Routing structure:
 
 See `CLAUDE.md` for a deeper architecture writeup (data flow, state, theming, path aliases).
 
+## OTA Updates (EAS Update)
+
+This app uses [`expo-updates`](https://docs.expo.dev/versions/v54.0.0/versions/latest/sdk/updates/) + [EAS Update](https://docs.expo.dev/versions/v54.0.0/eas-update/introduction/) to push JS/asset-only changes to installed builds without a new app store release.
+
+Each build profile in `eas.json` maps to its own update channel:
+
+| Build profile (`eas.json`) | Channel       | Typical use             |
+| -------------------------- | ------------- | ----------------------- |
+| `development`              | `development` | dev-client builds       |
+| `preview`                  | `preview`     | internal testing builds |
+| `production`               | `production`  | store builds            |
+
+**Runtime version policy**: `app.json` sets `runtimeVersion.policy` to `appVersion`, so an OTA update is only offered to installed builds whose `expo.version` matches the update's runtime version. Practically: if a change isn't JS/asset-only compatible with the currently shipped native build (new native module, SDK bump, native config change), bump `version` in `app.json` and ship a new native build via `eas build` first — an OTA update alone won't reach builds on a different runtime version.
+
+**Publishing an update** is currently a manual step (there's no CI job for it yet — `.github/workflows/ci.yml` only runs lint/typecheck/test):
+
+```bash
+eas update --branch preview --message "describe the change"
+eas update --branch production --message "describe the change"
+```
+
+**Scope**: OTA updates can only ship JS/asset changes. Anything touching native code or config (new native dependencies, permissions, native fields in `app.json`) requires a new build via `eas build --profile <profile>`, not just `eas update`.
+
 ## Contributing
 
 1. Create a branch off `main` for your change.
