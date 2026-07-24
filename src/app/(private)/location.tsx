@@ -62,6 +62,9 @@ export default function LocationScreen() {
         ref: searchBarRef,
         placeholder: t('location.searchPlaceholder'),
         hideWhenScrolling: false,
+        headerIconColor: '#fff',
+        textColor: '#fff',
+        hintTextColor: 'rgba(255,255,255,0.6)',
         onChangeText: (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
           useSearchStore.getState().setQuery(event.nativeEvent.text);
         },
