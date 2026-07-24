@@ -1,7 +1,7 @@
 {
   "auth": {
     "signIn": {
-      "title": "Howdy!",
+      "title": "Howdy!!",
       "subtitle": "Sign in to your account",
       "emailLabel": "Email",
       "emailPlaceholder": "you@example.com",
