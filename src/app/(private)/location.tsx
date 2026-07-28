@@ -23,11 +23,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Pressable } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  Pressable as GestureHandlerPressable,
+} from 'react-native-gesture-handler';
 import ReanimatedSwipeable, {
   SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import type { SearchBarCommands } from 'react-native-screens';
+import { scheduleOnRN } from 'react-native-worklets';
 
 export default function LocationScreen() {
   const router = useRouter();
@@ -76,9 +81,9 @@ export default function LocationScreen() {
         },
       },
       headerRight: () => (
-        <Pressable onPress={() => router.push('/settings')} hitSlop={12}>
+        <GestureHandlerPressable onPress={() => router.push('/settings')} hitSlop={12}>
           <SettingsIcon color="#fff" size={24} />
-        </Pressable>
+        </GestureHandlerPressable>
       ),
     });
   }, [navigation, unit]);
@@ -179,6 +184,14 @@ function SwipeableLocationRow({
 
   const subscribed = subscribedKeys.includes(locationKey(location.lat, location.lon));
 
+  const tapGesture = Gesture.Tap()
+    .maxDistance(10)
+    .onEnd((_event, success) => {
+      if (success) {
+        scheduleOnRN(onPress);
+      }
+    });
+
   function onBellPress() {
     if (subscribed) {
       unsubscribeLocation(location.lat, location.lon);
@@ -195,18 +208,18 @@ function SwipeableLocationRow({
       overshootRight={false}
       rightThreshold={40}
       renderRightActions={() => (
-        <Pressable style={styles.deleteAction} onPress={onDelete}>
+        <GestureHandlerPressable style={styles.deleteAction} onPress={onDelete}>
           <Trash2Icon color="#fff" />
-        </Pressable>
+        </GestureHandlerPressable>
       )}
       renderLeftActions={() =>
         notificationsEnabled ? (
-          <Pressable
+          <GestureHandlerPressable
             style={[styles.bellAction, subscribed && styles.bellActionActive]}
             onPress={onBellPress}
           >
             {subscribed ? <BellOffIcon color="#fff" /> : <BellIcon color="#fff" />}
-          </Pressable>
+          </GestureHandlerPressable>
         ) : null
       }
       onSwipeableWillOpen={() => {
@@ -221,9 +234,9 @@ function SwipeableLocationRow({
         }
       }}
     >
-      <Pressable onPress={onPress}>
+      <GestureDetector gesture={tapGesture}>
         <SavedLocationCard location={location} />
-      </Pressable>
+      </GestureDetector>
     </ReanimatedSwipeable>
   );
 }
