@@ -80,6 +80,7 @@ export default function SignUpScreen() {
               <View style={authStyles.inputWrapper}>
                 <Text style={authStyles.inputLabel}>{t('auth.signUp.codeLabel')}</Text>
                 <TextInput
+                  testID="sign-up-code-input"
                   style={authStyles.input}
                   value={code}
                   onChangeText={setCode}
@@ -94,6 +95,7 @@ export default function SignUpScreen() {
               </View>
 
               <Pressable
+                testID="sign-up-verify-button"
                 style={[authStyles.button, fetchStatus === 'fetching' && authStyles.buttonDisabled]}
                 onPress={handleVerify}
                 disabled={fetchStatus === 'fetching'}
@@ -106,6 +108,7 @@ export default function SignUpScreen() {
               </Pressable>
 
               <Pressable
+                testID="sign-up-resend-button"
                 style={styles.secondaryButton}
                 onPress={() => signUp.verifications.sendEmailCode()}
               >
@@ -139,6 +142,7 @@ export default function SignUpScreen() {
           <View style={authStyles.inputWrapper}>
             <Text style={authStyles.inputLabel}>{t('auth.signUp.emailLabel')}</Text>
             <TextInput
+              testID="sign-up-email-input"
               style={authStyles.input}
               value={email}
               onChangeText={setEmail}
@@ -157,6 +161,7 @@ export default function SignUpScreen() {
           <View style={authStyles.inputWrapper}>
             <Text style={authStyles.inputLabel}>{t('auth.signUp.passwordLabel')}</Text>
             <TextInput
+              testID="sign-up-password-input"
               style={authStyles.input}
               value={password}
               onChangeText={setPassword}
@@ -171,6 +176,7 @@ export default function SignUpScreen() {
           </View>
 
           <Pressable
+            testID="sign-up-submit-button"
             style={[
               authStyles.button,
               (!email || !password || fetchStatus === 'fetching') && authStyles.buttonDisabled,
@@ -189,7 +195,7 @@ export default function SignUpScreen() {
         <View style={authStyles.footer}>
           <Text style={authStyles.footerText}>{t('auth.signUp.footerText')}</Text>
           <Link href="/sign-in" asChild>
-            <Pressable>
+            <Pressable testID="sign-up-signin-link">
               <Text style={authStyles.footerLink}>{t('auth.signUp.footerLink')}</Text>
             </Pressable>
           </Link>

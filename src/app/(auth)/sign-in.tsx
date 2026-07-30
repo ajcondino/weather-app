@@ -56,7 +56,9 @@ export default function SignInScreen() {
           <SkyBackground isDay={false} />
           {/* Header */}
           <View style={authStyles.header}>
-            <Text style={authStyles.title}>{t('auth.signIn.title')}</Text>
+            <Text testID="sign-in-title" style={authStyles.title}>
+              {t('auth.signIn.title')}
+            </Text>
             <Text style={authStyles.subtitle}>{t('auth.signIn.subtitle')}</Text>
           </View>
 
@@ -65,6 +67,7 @@ export default function SignInScreen() {
             <View style={authStyles.inputWrapper}>
               <Text style={authStyles.inputLabel}>{t('auth.signIn.emailLabel')}</Text>
               <TextInput
+                testID="sign-in-email-input"
                 style={authStyles.input}
                 value={email}
                 onChangeText={setEmail}
@@ -80,6 +83,7 @@ export default function SignInScreen() {
             <View style={authStyles.inputWrapper}>
               <Text style={authStyles.inputLabel}>{t('auth.signIn.passwordLabel')}</Text>
               <TextInput
+                testID="sign-in-password-input"
                 style={authStyles.input}
                 value={password}
                 onChangeText={setPassword}
@@ -91,6 +95,7 @@ export default function SignInScreen() {
             </View>
 
             <Pressable
+              testID="sign-in-submit-button"
               style={[
                 authStyles.button,
                 (!email || !password || fetchStatus === 'fetching') && authStyles.buttonDisabled,
@@ -110,7 +115,7 @@ export default function SignInScreen() {
           <View style={authStyles.footer}>
             <Text style={authStyles.footerText}>{t('auth.signIn.footerText')}</Text>
             <Link href="/sign-up" asChild>
-              <Pressable>
+              <Pressable testID="sign-in-signup-link">
                 <Text style={authStyles.footerLink}>{t('auth.signIn.footerLink')}</Text>
               </Pressable>
             </Link>

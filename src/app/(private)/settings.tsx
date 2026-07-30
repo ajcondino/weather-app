@@ -38,7 +38,7 @@ export default function SettingsModal() {
           headerTitle: t('settings.headerTitle'),
           headerTitleStyle: { color: '#fff' },
           headerRight: () => (
-            <Pressable onPress={onDone} hitSlop={12}>
+            <Pressable testID="settings-done-button" onPress={onDone} hitSlop={12}>
               <Text style={styles.doneButton}>{t('settings.doneButton')}</Text>
             </Pressable>
           ),
@@ -79,6 +79,7 @@ export default function SettingsModal() {
               </View>
               <View style={styles.segmentedControl}>
                 <Pressable
+                  testID="settings-unit-celsius"
                   style={[styles.segment, styles.segmentLeft, unit === 'C' && styles.segmentActive]}
                   onPress={() => unit !== 'C' && toggleUnit()}
                 >
@@ -87,6 +88,7 @@ export default function SettingsModal() {
                   </Text>
                 </Pressable>
                 <Pressable
+                  testID="settings-unit-fahrenheit"
                   style={[
                     styles.segment,
                     styles.segmentRight,
@@ -109,6 +111,7 @@ export default function SettingsModal() {
             <View style={styles.row}>
               <Text style={styles.rowLabel}>{t('settings.weatherAlertsLabel')}</Text>
               <Switch
+                testID="settings-notifications-switch"
                 value={notificationsEnabled}
                 onValueChange={toggleNotifications}
                 trackColor={{ false: 'rgba(255,255,255,0.2)', true: '#4FA8E8' }}
@@ -140,6 +143,7 @@ export default function SettingsModal() {
                     >
                       <Text style={styles.rowLabel}>{location.name}</Text>
                       <Pressable
+                        testID={`settings-unsubscribe-${location.lat}-${location.lon}`}
                         onPress={() => unsubscribeLocation(location.lat, location.lon)}
                         hitSlop={12}
                       >
@@ -154,7 +158,11 @@ export default function SettingsModal() {
           )}
 
           {/* Sign out */}
-          <Pressable style={styles.signOutButton} onPress={handleSignOut}>
+          <Pressable
+            testID="settings-signout-button"
+            style={styles.signOutButton}
+            onPress={handleSignOut}
+          >
             <LogOutIcon color="#FF6B6B" size={18} />
             <Text style={styles.signOutText}>{t('settings.signOutButton')}</Text>
           </Pressable>

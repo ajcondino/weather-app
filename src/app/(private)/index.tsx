@@ -47,7 +47,7 @@ export default function HomeScreen() {
 
   if (!isLoaded) {
     return (
-      <View style={styles.container}>
+      <View testID="home-loading" style={styles.container}>
         <SkyBackground />
       </View>
     );
@@ -65,13 +65,18 @@ export default function HomeScreen() {
         subscribedKeys={subscribedKeys}
       />
       <PagerView
+        testID="home-pager"
         ref={pagerRef}
         style={styles.pager}
         initialPage={0}
         onPageSelected={(e) => setActiveIndex(e.nativeEvent.position)}
       >
         {savedLocations.map((location) => (
-          <WeatherCard key={`${location.lat}-${location.lon}`} location={location} />
+          <WeatherCard
+            key={`${location.lat}-${location.lon}`}
+            location={location}
+            testID={`weather-card-${location.lat}-${location.lon}`}
+          />
         ))}
       </PagerView>
       <LocationFooter count={savedLocations.length} activeIndex={activeIndex} />

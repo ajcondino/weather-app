@@ -1,0 +1,5 @@
+appId: com.anonymous.weatherapp
+---
+- launchApp
+- assertVisible:
+    id: 'sign-in-title'

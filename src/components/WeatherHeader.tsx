@@ -23,7 +23,9 @@ export default function WeatherHeader({ weather }: WeatherHeaderProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.location}>{weather.location.name}</Text>
-      <Text style={styles.temperature}>{formatTemp(weather.temperatureC, unit)}</Text>
+      <Text testID="weather-header-temperature" style={styles.temperature}>
+        {formatTemp(weather.temperatureC, unit)}
+      </Text>
       <Text style={styles.condition}>{t(`weather.conditions.${weather.condition}`)}</Text>
       <Text style={styles.highLow}>
         H: {weather.daily[0]?.maxTempC}° L: {weather.daily[0]?.minTempC}°

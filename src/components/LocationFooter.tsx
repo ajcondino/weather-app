@@ -20,13 +20,13 @@ export function LocationFooter({ count, activeIndex }: LocationFooterProps) {
       tint="systemMaterial"
       style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}
     >
-      <Pressable onPress={() => router.push('/location')}>
+      <Pressable testID="home-footer-list-button" onPress={() => router.push('/location')}>
         <ListIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
 
       <PageDots count={count} activeIndex={activeIndex} />
 
-      <Pressable onPress={() => router.push('/settings')}>
+      <Pressable testID="home-footer-settings-button" onPress={() => router.push('/settings')}>
         <SettingsIcon color="#fff" size={28} strokeWidth={1.2} />
       </Pressable>
     </BlurView>

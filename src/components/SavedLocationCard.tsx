@@ -8,9 +8,10 @@ import { SkyBackground } from './SkyBackground';
 
 interface SavedLocationCardProps {
   location: Location;
+  testID?: string;
 }
 
-export function SavedLocationCard({ location }: SavedLocationCardProps) {
+export function SavedLocationCard({ location, testID }: SavedLocationCardProps) {
   const unit = useUnitsStore((s) => s.unit);
   const { t } = useTranslation();
 
@@ -19,7 +20,7 @@ export function SavedLocationCard({ location }: SavedLocationCardProps) {
   const localTime = getLocalTime(location.lon);
 
   return (
-    <View style={styles.card}>
+    <View testID={testID} style={styles.card}>
       <SkyBackground condition={weather?.condition ?? 'clear'} isDay={weather?.isDay ?? true} />
 
       <View style={styles.content}>

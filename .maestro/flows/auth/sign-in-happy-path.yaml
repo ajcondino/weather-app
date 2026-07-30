@@ -1,0 +1,9 @@
+appId: com.anonymous.weatherapp
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: 'sign-in-email-input'
+- runFlow: ../../subflows/login-as-test-user.yaml
+- assertNotVisible:
+    id: 'sign-in-email-input'
