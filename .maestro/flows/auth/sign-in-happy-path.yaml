@@ -2,10 +2,6 @@ appId: com.anonymous.weatherapp
 ---
 - launchApp:
     clearState: true
-- extendedWaitUntil:
-    visible:
-      id: 'sign-in-email-input'
-    timeout: 30000
 - assertVisible:
     id: 'sign-in-email-input'
 - runFlow: ../../subflows/login-as-test-user.yaml

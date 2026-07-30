@@ -19,6 +19,13 @@
     "production": {
       "autoIncrement": true,
       "channel": "production"
+    },
+    "e2e-test": {
+      "extends": "preview",
+      "channel": "e2e",
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "submit": {
