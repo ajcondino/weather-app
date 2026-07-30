@@ -6,6 +6,5 @@ appId: com.anonymous.weatherapp
 - tapOn:
     id: 'sign-in-password-input'
 - inputText: ${TEST_USER_PASSWORD}
-- hideKeyboard
 - tapOn:
     id: 'sign-in-submit-button'
