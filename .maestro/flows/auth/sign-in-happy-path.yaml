@@ -5,5 +5,5 @@ appId: com.anonymous.weatherapp
 - assertVisible:
     id: 'sign-in-email-input'
 - runFlow: ../../subflows/login-as-test-user.yaml
-- assertNotVisible:
-    id: 'sign-in-email-input'
+- assertVisible:
+    id: 'home-pager|location-settings-button'

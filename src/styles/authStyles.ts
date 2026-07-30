@@ -79,4 +79,10 @@ export const authStyles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+  versionLabel: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.35)',
+    textAlign: 'center',
+    marginTop: 16,
+  },
 });

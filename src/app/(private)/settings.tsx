@@ -1,5 +1,6 @@
 import { MAX_SUBSCRIPTIONS, useNotificationsStore } from '#/store/notificationsStore';
 import { useUnitsStore } from '#/store/unitsStore';
+import { versionLabel } from '#/utils/appInfo';
 import { formatTemp } from '#/utils/temperature';
 import { useAuth, useUser } from '@clerk/expo';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -166,6 +167,10 @@ export default function SettingsModal() {
             <LogOutIcon color="#FF6B6B" size={18} />
             <Text style={styles.signOutText}>{t('settings.signOutButton')}</Text>
           </Pressable>
+
+          <Text testID="settings-version-label" style={styles.versionLabel}>
+            {versionLabel}
+          </Text>
         </ScrollView>
       </View>
     </>
@@ -312,5 +317,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#FF6B6B',
+  },
+  versionLabel: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.35)',
+    textAlign: 'center',
+    marginTop: 16,
   },
 });
