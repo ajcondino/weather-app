@@ -1,9 +1,9 @@
+import { useReliableHeaderHeight } from '#/hooks/useReliableHeaderHeight';
 import { MAX_SUBSCRIPTIONS, useNotificationsStore } from '#/store/notificationsStore';
 import { useUnitsStore } from '#/store/unitsStore';
 import { versionLabel } from '#/utils/appInfo';
 import { formatTemp } from '#/utils/temperature';
 import { useAuth, useUser } from '@clerk/expo';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Stack, useRouter } from 'expo-router';
 import { BellOffIcon, LogOutIcon, UserIcon } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-nat
 
 export default function SettingsModal() {
   const router = useRouter();
-  const headerHeight = useHeaderHeight();
+  const headerHeight = useReliableHeaderHeight(true);
   const { signOut } = useAuth();
   const { user } = useUser();
   const { t } = useTranslation();
