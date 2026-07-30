@@ -2,12 +2,12 @@ import { searchLocations } from '#/api/geocoding';
 import { Location } from '#/api/types';
 import { NetworkOfflineLabel } from '#/components/NetworkIndicator';
 import { SavedLocationCard } from '#/components/SavedLocationCard';
+import { useReliableHeaderHeight } from '#/hooks/useReliableHeaderHeight';
 import { locationKey, useNotificationsStore } from '#/store/notificationsStore';
 import { usePagerStore } from '#/store/pagerStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useSearchStore } from '#/store/searchStore';
 import { useUnitsStore } from '#/store/unitsStore';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigation, useRouter } from 'expo-router';
 import { BellIcon, BellOffIcon, SettingsIcon, Trash2Icon } from 'lucide-react-native';
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -37,7 +38,7 @@ import { scheduleOnRN } from 'react-native-worklets';
 export default function LocationScreen() {
   const router = useRouter();
   const navigation = useNavigation();
-  const headerHeight = useHeaderHeight();
+  const headerHeight = useReliableHeaderHeight();
   const { t } = useTranslation();
 
   const query = useSearchStore((s) => s.query);
@@ -126,7 +127,10 @@ export default function LocationScreen() {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scroll}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          Platform.OS === 'android' && { paddingTop: headerHeight },
+        ]}
       >
         <NetworkOfflineLabel />
         {savedLocations.map((location, i) => (
