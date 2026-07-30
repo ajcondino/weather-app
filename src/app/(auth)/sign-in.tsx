@@ -1,5 +1,6 @@
 import { SkyBackground } from '#/components/SkyBackground';
 import { authStyles } from '#/styles/authStyles';
+import { versionLabel } from '#/utils/appInfo';
 import { useSignIn } from '@clerk/expo';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -120,6 +121,10 @@ export default function SignInScreen() {
               </Pressable>
             </Link>
           </View>
+
+          <Text testID="sign-in-version-label" style={authStyles.versionLabel}>
+            {versionLabel}
+          </Text>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
