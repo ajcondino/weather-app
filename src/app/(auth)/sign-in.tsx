@@ -115,7 +115,7 @@ export default function SignInScreen() {
           <View style={authStyles.footer}>
             <Text style={authStyles.footerText}>{t('auth.signIn.footerText')}</Text>
             <Link href="/sign-up" asChild>
-              <Pressable>
+              <Pressable testID="sign-in-signup-link">
                 <Text style={authStyles.footerLink}>{t('auth.signIn.footerLink')}</Text>
               </Pressable>
             </Link>

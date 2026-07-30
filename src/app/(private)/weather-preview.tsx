@@ -48,14 +48,14 @@ export default function WeatherPreviewModal() {
           headerTitle: '',
           headerLeft: () => {
             return (
-              <Pressable onPress={onCancel}>
+              <Pressable testID="weather-preview-cancel-button" onPress={onCancel}>
                 <Text style={styles.cancelButton}>{t('weatherPreview.cancel')}</Text>
               </Pressable>
             );
           },
           headerRight: () => {
             return alreadySaved ? undefined : (
-              <Pressable onPress={onAdd}>
+              <Pressable testID="weather-preview-add-button" onPress={onAdd}>
                 <Text style={styles.addButton}>{t('weatherPreview.add')}</Text>
               </Pressable>
             );
@@ -63,7 +63,7 @@ export default function WeatherPreviewModal() {
         }}
       />
       <View style={styles.root}>
-        <WeatherCard location={location} />
+        <WeatherCard location={location} testID="weather-preview-card" />
       </View>
     </>
   );

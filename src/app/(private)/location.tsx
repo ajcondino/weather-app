@@ -65,6 +65,7 @@ export default function LocationScreen() {
     navigation.setOptions({
       headerSearchBarOptions: {
         ref: searchBarRef,
+        testID: 'location-search-input',
         placeholder: t('location.searchPlaceholder'),
         hideWhenScrolling: false,
         headerIconColor: '#fff',
@@ -81,7 +82,11 @@ export default function LocationScreen() {
         },
       },
       headerRight: () => (
-        <GestureHandlerPressable onPress={() => router.push('/settings')} hitSlop={12}>
+        <GestureHandlerPressable
+          testID="location-settings-button"
+          onPress={() => router.push('/settings')}
+          hitSlop={12}
+        >
           <SettingsIcon color="#fff" size={24} />
         </GestureHandlerPressable>
       ),
@@ -147,6 +152,7 @@ export default function LocationScreen() {
             keyExtractor={(item) => item.name + item.lat + item.lon}
             renderItem={({ item }) => (
               <TouchableOpacity
+                testID={`location-search-result-${item.lat}-${item.lon}`}
                 style={styles.row}
                 activeOpacity={0.6}
                 onPress={() => onSelectSearchResult(item)}
@@ -201,20 +207,28 @@ function SwipeableLocationRow({
     swipeableRef.current?.close();
   }
 
+  const rowTestId = `saved-location-row-${location.lat}-${location.lon}`;
+
   return (
     <ReanimatedSwipeable
+      testID={rowTestId}
       ref={swipeableRef}
       friction={2}
       overshootRight={false}
       rightThreshold={40}
       renderRightActions={() => (
-        <GestureHandlerPressable style={styles.deleteAction} onPress={onDelete}>
+        <GestureHandlerPressable
+          testID={`saved-location-delete-${location.lat}-${location.lon}`}
+          style={styles.deleteAction}
+          onPress={onDelete}
+        >
           <Trash2Icon color="#fff" />
         </GestureHandlerPressable>
       )}
       renderLeftActions={() =>
         notificationsEnabled ? (
           <GestureHandlerPressable
+            testID={`saved-location-notify-${location.lat}-${location.lon}`}
             style={[styles.bellAction, subscribed && styles.bellActionActive]}
             onPress={onBellPress}
           >
@@ -235,7 +249,10 @@ function SwipeableLocationRow({
       }}
     >
       <GestureDetector gesture={tapGesture}>
-        <SavedLocationCard location={location} />
+        <SavedLocationCard
+          location={location}
+          testID={`saved-location-card-${location.lat}-${location.lon}`}
+        />
       </GestureDetector>
     </ReanimatedSwipeable>
   );

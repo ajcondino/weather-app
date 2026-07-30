@@ -8,9 +8,10 @@ import WeatherHeader from './WeatherHeader';
 
 interface WeatherCardProps {
   location: Location | null;
+  testID?: string;
 }
 
-export function WeatherCard({ location }: WeatherCardProps) {
+export function WeatherCard({ location, testID }: WeatherCardProps) {
   const { data: weather } = useCurrentWeather(
     location ? { lat: location.lat, lon: location.lon } : null,
     location,
@@ -20,6 +21,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
     <>
       <SkyBackground condition={weather?.condition} isDay={weather?.isDay} />
       <ScrollView
+        testID={testID}
         style={styles.scroll}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}

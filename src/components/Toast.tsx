@@ -20,7 +20,7 @@ export function Toast() {
   if (!message) return null;
 
   return (
-    <View style={[styles.root, { bottom: insets.bottom + 16 }]}>
+    <View testID="toast-message" style={[styles.root, { bottom: insets.bottom + 16 }]}>
       <TriangleAlert color="#FF6B6B" size={16} />
       <Text style={styles.text}>{message}</Text>
     </View>
