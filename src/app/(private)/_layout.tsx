@@ -1,11 +1,12 @@
 import { NetworkBanner } from '#/components/NetworkIndicator';
 import { Toast } from '#/components/Toast';
+import { asyncStoragePersister } from '#/lib/persister';
 import { queryClient } from '#/lib/queryClient';
 import { useNotificationsStore } from '#/store/notificationsStore';
 import { useSavedLocationsStore } from '#/store/savedLocationsStore';
 import { useUnitsStore } from '#/store/unitsStore';
 import { useAuth } from '@clerk/expo';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Redirect, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -32,7 +33,10 @@ export default function PrivateRoutesLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister: asyncStoragePersister, maxAge: 24 * 60 * 60 * 1000 }}
+      >
         <Stack
           screenOptions={{
             headerShown: false,
@@ -76,7 +80,7 @@ export default function PrivateRoutesLayout() {
         </Stack>
         <NetworkBanner />
         <Toast />
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </GestureHandlerRootView>
   );
 }
